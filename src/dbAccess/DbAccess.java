@@ -1,0 +1,289 @@
+/*   Car-L-Marx
+ *
+ *   Oct 9, 2014  
+ *   CS 320 Fall 2014
+ *
+ *		Michael Allen-Bond
+ *		Lise Driggers
+ *		Jesse Pomerenk
+ *
+ *		dbAccess
+ *
+ *   DbAccess.java
+ */
+
+package dbAccess;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+public class DbAccess
+{
+	private Connection conn1;
+	private java.sql.Statement statement;
+	private PreparedStatement insertVehicle;
+	private PreparedStatement deleteVehicle;
+	private PreparedStatement getVehicleByMake;
+	private PreparedStatement getVehicleById;
+
+	/**
+	 * Note that the constructor is listed as private. That will disallow the
+	 * instantiation of objects without going through the singleton pattern
+	 */
+	private DbAccess()
+	{
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			System.out.println("got a connection!");
+
+			/** my local sql database */
+			String url1 = "jdbc:mysql://localhost:8889/Car_L_Marx";
+			Properties info = new Properties();
+			info.put("user", "root");
+			info.put("password", "root");
+
+			conn1 = DriverManager.getConnection(url1, info);
+			if (conn1 != null)
+			{
+				System.out.println("Connected to the database ");
+			}
+			statement = conn1.createStatement();
+		} catch (Exception e)
+		{
+			System.out.println("Error in database connection " + e);
+		}
+		// create all of the prepared statements one time
+		this.createPreparedStatements();
+	}
+
+	private static class DbAccessHelper
+	{
+		private static final DbAccess INSTANCE = new DbAccess();
+	}
+
+	// This is the method that is called by the outside to create the object in
+	// a singleton pattern
+	public static DbAccess getInstance()
+	{
+		return DbAccessHelper.INSTANCE;
+	}
+
+	private void createPreparedStatements()
+	{
+		try
+		{
+			String insertVehicleString = "INSERT INTO `Car_L_Marx`.`vehicle` (`vehicleId`, `make`, `model`, `year`, `color`) VALUES (null, ?, ?, ?, ?);";
+			insertVehicle = conn1.prepareStatement(insertVehicleString);
+			String deleteVehicleString = "DELETE FROM `Car_L_Marx`.`vehicle` WHERE `vehicleID` = ?";
+			deleteVehicle = conn1.prepareStatement(deleteVehicleString);
+			String getVehicleByMakeString = "SELECT * FROM `Car_L_Marx`.`vehicle` WHERE `make` = ? ORDER BY `model";
+			getVehicleByMake = conn1.prepareStatement(getVehicleByMakeString);
+			String getVehicleByIdString = "SELECT * FROM `Car_L_Marx`.`vehicle` WHERE `vehicleId` = ? ORDER BY `model";
+			getVehicleById = conn1.prepareStatement(getVehicleByIdString);
+		} catch (SQLException e)
+		{
+			System.out.println("problem creating prepared statements " + e);
+		}
+	}
+
+	public void deleteVehicle(String name)
+	{
+		try
+		{
+			// this.conn1.setAutoCommit(false);
+			// using the prepared statement
+			deleteVehicle.setString(1, name);
+			deleteVehicle.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on delete of vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VendorError: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+
+	public void insertVehicle(String name, String url, int family)
+	{
+		// clean the in bound data before putting it into the database
+		String cleanName = sanitizeName(name);
+		String cleanURL = sanitizeURL(url);
+		int cleanFamily = sanitizeFamily(family);
+
+		try
+		{
+			// this.conn1.setAutoCommit(false);
+			/**
+			 * using the prepared statement note, using only sanitized data this
+			 * will avoid sql injection attacks
+			 */
+
+			this.insertVehicle.setString(1, cleanName);
+			this.insertVehicle.setString(2, cleanURL);
+			this.insertVehicle.setInt(3, cleanFamily);
+			insertVehicle.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on insert of vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VendorError: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+
+	public void getVehicle()
+	{
+		try
+		{
+			ResultSet resultSet = statement
+					.executeQuery("SELECT * from vehicle");
+
+			while (resultSet.next())
+			{
+				// the following statement also works. Showing options only
+//				System.out.println(resultSet.getString(1) + "\t" + resultSet.getString(2) + " \t" + resultSet.getString(3));
+				String make = resultSet.getString("make"); // Note, these
+																	// are
+																	// backwards
+																	// to show
+				int id = resultSet.getInt("vehicleId"); // that the order doesn't
+														// matter. It is using
+														// the field name
+														// (column name)
+				String model = resultSet.getString("model");
+				int year = resultSet.getInt("year");
+				String color = resultSet.getString("color");
+				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
+			}
+		} catch (SQLException ex)
+		{
+			// // handle any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			ex.printStackTrace();
+		}
+	}
+	
+	public void getVehicleInOrder()
+	{
+		try
+		{
+			ResultSet resultSet = statement
+					.executeQuery("SELECT * FROM vehicle order by make, model");
+
+			while (resultSet.next())
+			{
+				// the following statement also works. Showing options only
+//				System.out.println(resultSet.getString(1) + "\t" + resultSet.getString(2) + " \t" + resultSet.getString(3));
+				String make = resultSet.getString("make"); // Note, these
+																	// are
+																	// backwards
+																	// to show
+				int id = resultSet.getInt("vehicleId"); // that the order doesn't
+														// matter. It is using
+														// the field name
+														// (column name)
+				String model = resultSet.getString("model");
+				int year = resultSet.getInt("year");
+				String color = resultSet.getString("color");
+				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
+			}
+		} catch (SQLException ex)
+		{
+			// // handle any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			ex.printStackTrace();
+		}
+	}
+	
+	public void getVehiclebyMake(String Make)
+	{
+		System.out.println("~~~~~~ vehicle by Make");
+		try
+		{
+			this.getVehicleByMake.setString(1, Make);
+			ResultSet resultSet = this.getVehicleByMake.executeQuery();
+			
+			while (resultSet.next())
+			{
+				String make = resultSet.getString("make"); 
+				int id = resultSet.getInt("vehicleId"); 
+				String model = resultSet.getString("model");
+				int year = resultSet.getInt("year");
+				String color = resultSet.getString("color");
+				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
+			}
+		} catch (SQLException ex)
+		{
+			// // handle any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			ex.printStackTrace();
+		}
+	}
+	
+	public void getVehiclebyId(int ID)
+	{
+		System.out.println("~~~~~~ vehicle by id");
+		try
+		{
+			this.getVehicleById.setInt(1, ID);
+			ResultSet resultSet = this.getVehicleById.executeQuery();
+			
+			while (resultSet.next())
+			{
+				String make = resultSet.getString("make"); 
+				int id = resultSet.getInt("vehicleId"); 
+				String model = resultSet.getString("model");
+				int year = resultSet.getInt("year");
+				String color = resultSet.getString("color");
+				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
+			}
+		} catch (SQLException ex)
+		{
+			//  handle any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			ex.printStackTrace();
+		}
+	}
+
+	private String sanitizeName(String name)
+	{
+		// TODO sanitize name string
+		/*
+		 * thoughts - white list length limit black list
+		 */
+		return name;
+	}
+
+	private String sanitizeURL(String url)
+	{
+		// TODO sanitize url string
+		/*
+		 * thoughts - make sure it looks like a url - regular expression?
+		 */
+		return url;
+	}
+
+	private int sanitizeFamily(int family)
+	{
+		// TODO sanitize int family
+		/*
+		 * thoughts - make sure that it is in the family file
+		 */
+		return family;
+	}
+}

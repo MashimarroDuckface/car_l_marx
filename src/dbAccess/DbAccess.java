@@ -21,14 +21,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import security.PasswordEncrypt;
+
 public class DbAccess
 {
-	private Connection conn1;
+	private Connection conn;
 	private java.sql.Statement statement;
-	private PreparedStatement insertVehicle;
-	private PreparedStatement deleteVehicle;
-	private PreparedStatement getVehicleByMake;
-	private PreparedStatement getVehicleById;
+
+	// Prepared statemets
+	// private PreparedStatement insertVehicle;
+	private PreparedStatement insertUser;
+	private PreparedStatement getAllUser;
+	private PreparedStatement getUserSalt;
+	private PreparedStatement getUserPass;
+
+	// private PreparedStatement deleteVehicle;
+	// private PreparedStatement getVehicleByMake;
+	// private PreparedStatement getVehicleById;
 
 	/**
 	 * Note that the constructor is listed as private. That will disallow the
@@ -39,20 +48,22 @@ public class DbAccess
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			System.out.println("got a connection!");
+			// System.out.println("got a connection!");
 
 			/** my local sql database */
-			String url1 = "jdbc:mysql://localhost:8889/Car_L_Marx";
+			// String url1 = "jdbc:mysql://localhost:8889/Car_L_Marx";
+			String url1 = "jdbc:mysql://vps1.admalledd.com:1981/car_l_marx";
+
 			Properties info = new Properties();
 			info.put("user", "root");
-			info.put("password", "root");
+			info.put("password", "houdini");
 
-			conn1 = DriverManager.getConnection(url1, info);
-			if (conn1 != null)
+			conn = DriverManager.getConnection(url1, info);
+			if (conn != null)
 			{
 				System.out.println("Connected to the database ");
 			}
-			statement = conn1.createStatement();
+			statement = conn.createStatement();
 		} catch (Exception e)
 		{
 			System.out.println("Error in database connection " + e);
@@ -77,90 +88,93 @@ public class DbAccess
 	{
 		try
 		{
-			String insertVehicleString = "INSERT INTO `Car_L_Marx`.`vehicle` (`vehicleId`, `make`, `model`, `year`, `color`) VALUES (null, ?, ?, ?, ?);";
-			insertVehicle = conn1.prepareStatement(insertVehicleString);
-			String deleteVehicleString = "DELETE FROM `Car_L_Marx`.`vehicle` WHERE `vehicleID` = ?";
-			deleteVehicle = conn1.prepareStatement(deleteVehicleString);
-			String getVehicleByMakeString = "SELECT * FROM `Car_L_Marx`.`vehicle` WHERE `make` = ? ORDER BY `model";
-			getVehicleByMake = conn1.prepareStatement(getVehicleByMakeString);
-			String getVehicleByIdString = "SELECT * FROM `Car_L_Marx`.`vehicle` WHERE `vehicleId` = ? ORDER BY `model";
-			getVehicleById = conn1.prepareStatement(getVehicleByIdString);
+			// String insertVehicleString =
+			// "INSERT INTO `car_l_marx`.`vehicle` (`vehicleId`, `make`, `model`, `year`, `color`) VALUES (null, ?, ?, ?, ?);";
+			// insertVehicle = conn.prepareStatement(insertVehicleString);
+			// String deleteVehicleString =
+			// "DELETE FROM `car_l_marx`.`vehicle` WHERE `vehicleID` = ?";
+			// deleteVehicle = conn.prepareStatement(deleteVehicleString);
+			// String getVehicleByMakeString =
+			// "SELECT * FROM `car_l_marx`.`vehicle` WHERE `make` = ? ORDER BY `model";
+			// getVehicleByMake = conn.prepareStatement(getVehicleByMakeString);
+			// String getVehicleByIdString =
+			// "SELECT * FROM `car_l_marx`.`vehicle` WHERE `vehicleId` = ? ORDER BY `model";
+			// getVehicleById = conn.prepareStatement(getVehicleByIdString);
+
+			// User statements
+			String insertUserString = "INSERT INTO `car_l_marx`.`user` (`idUser`, `userName`, `userPassword`, `fName`, `lNname`, `userEmail`) VALUES (NULL, ?, ?, ?, ?, ?)";
+			insertUser = conn.prepareStatement(insertUserString);
+			String getAllUserString = "SELECT * FROM `user`";
+			getAllUser = conn.prepareStatement(getAllUserString);
+			String getUserSaltString = "SELECT `passSalt` FROM  `user` WHERE  `userName` LIKE  ?";
+			getUserSalt = conn.prepareStatement(getUserSaltString);
+			String getUserPassString = "SELECT `userPassword` FROM  `user` WHERE  `userName` LIKE  ?";
+			getUserPass = conn.prepareStatement(getUserPassString);
+
 		} catch (SQLException e)
 		{
 			System.out.println("problem creating prepared statements " + e);
 		}
 	}
 
-	public void deleteVehicle(String name)
+	public String getSalt(String userName)
 	{
+		String cleanUserName = sanitizeUserName(userName);
 		try
 		{
-			// this.conn1.setAutoCommit(false);
-			// using the prepared statement
-			deleteVehicle.setString(1, name);
-			deleteVehicle.execute();
+			this.getUserSalt.setString(1, cleanUserName);
+			ResultSet resultSet = this.getUserSalt.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("passSalt");
+			}
 		} catch (SQLException e)
 		{
-			System.out.println("error on delete of vehicle " + e);
+			System.out.println("error on fetch of user salt " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
-			System.out.println("VendorError: " + e.getErrorCode());
+			System.out.println("User Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
+		return null;
 	}
-
-	public void insertVehicle(String name, String url, int family)
+	
+	public String getPass(String userName)
 	{
-		// clean the in bound data before putting it into the database
-		String cleanName = sanitizeName(name);
-		String cleanURL = sanitizeURL(url);
-		int cleanFamily = sanitizeFamily(family);
-
+		String cleanUserName = sanitizeUserName(userName);
 		try
 		{
-			// this.conn1.setAutoCommit(false);
-			/**
-			 * using the prepared statement note, using only sanitized data this
-			 * will avoid sql injection attacks
-			 */
-
-			this.insertVehicle.setString(1, cleanName);
-			this.insertVehicle.setString(2, cleanURL);
-			this.insertVehicle.setInt(3, cleanFamily);
-			insertVehicle.execute();
+			this.getUserPass.setString(1, cleanUserName);
+			ResultSet resultSet = this.getUserPass.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("userPassword");
+			}
 		} catch (SQLException e)
 		{
-			System.out.println("error on insert of vehicle " + e);
+			System.out.println("error on fetch of user password " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
-			System.out.println("VendorError: " + e.getErrorCode());
+			System.out.println("User Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
+		return null;
 	}
 
-	public void getVehicle()
+	public void getAllUser()
 	{
 		try
 		{
-			ResultSet resultSet = statement
-					.executeQuery("SELECT * from vehicle");
+			ResultSet resultSet = statement.executeQuery("SELECT * from user");
 
 			while (resultSet.next())
 			{
-				// the following statement also works. Showing options only
-//				System.out.println(resultSet.getString(1) + "\t" + resultSet.getString(2) + " \t" + resultSet.getString(3));
-				String make = resultSet.getString("make"); // Note, these
-																	// are
-																	// backwards
-																	// to show
-				int id = resultSet.getInt("vehicleId"); // that the order doesn't
-														// matter. It is using
-														// the field name
-														// (column name)
-				String model = resultSet.getString("model");
-				int year = resultSet.getInt("year");
-				String color = resultSet.getString("color");
-				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
+				String userName = resultSet.getString("userName");
+				String firstName = resultSet.getString("fName");
+				String lastName = resultSet.getString("lName");
+				String emailAdd = resultSet.getString("userEmail");
+				System.out.println(userName + " " + firstName + " " + lastName
+						+ " " + emailAdd);
 			}
 		} catch (SQLException ex)
 		{
@@ -171,96 +185,183 @@ public class DbAccess
 			ex.printStackTrace();
 		}
 	}
-	
-	public void getVehicleInOrder()
-	{
-		try
-		{
-			ResultSet resultSet = statement
-					.executeQuery("SELECT * FROM vehicle order by make, model");
 
-			while (resultSet.next())
-			{
-				// the following statement also works. Showing options only
-//				System.out.println(resultSet.getString(1) + "\t" + resultSet.getString(2) + " \t" + resultSet.getString(3));
-				String make = resultSet.getString("make"); // Note, these
-																	// are
-																	// backwards
-																	// to show
-				int id = resultSet.getInt("vehicleId"); // that the order doesn't
-														// matter. It is using
-														// the field name
-														// (column name)
-				String model = resultSet.getString("model");
-				int year = resultSet.getInt("year");
-				String color = resultSet.getString("color");
-				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
-			}
-		} catch (SQLException ex)
-		{
-			// // handle any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-			ex.printStackTrace();
-		}
-	}
-	
-	public void getVehiclebyMake(String Make)
-	{
-		System.out.println("~~~~~~ vehicle by Make");
-		try
-		{
-			this.getVehicleByMake.setString(1, Make);
-			ResultSet resultSet = this.getVehicleByMake.executeQuery();
-			
-			while (resultSet.next())
-			{
-				String make = resultSet.getString("make"); 
-				int id = resultSet.getInt("vehicleId"); 
-				String model = resultSet.getString("model");
-				int year = resultSet.getInt("year");
-				String color = resultSet.getString("color");
-				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
-			}
-		} catch (SQLException ex)
-		{
-			// // handle any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-			ex.printStackTrace();
-		}
-	}
-	
-	public void getVehiclebyId(int ID)
-	{
-		System.out.println("~~~~~~ vehicle by id");
-		try
-		{
-			this.getVehicleById.setInt(1, ID);
-			ResultSet resultSet = this.getVehicleById.executeQuery();
-			
-			while (resultSet.next())
-			{
-				String make = resultSet.getString("make"); 
-				int id = resultSet.getInt("vehicleId"); 
-				String model = resultSet.getString("model");
-				int year = resultSet.getInt("year");
-				String color = resultSet.getString("color");
-				System.out.println(id + " " + make + " "  + model + " " + year + " " + color);
-			}
-		} catch (SQLException ex)
-		{
-			//  handle any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-			ex.printStackTrace();
-		}
-	}
+	// public void deleteVehicle(String name)
+	// {
+	// try
+	// {
+	// // this.conn1.setAutoCommit(false);
+	// // using the prepared statement
+	// deleteVehicle.setString(1, name);
+	// deleteVehicle.execute();
+	// } catch (SQLException e)
+	// {
+	// System.out.println("error on delete of vehicle " + e);
+	// System.out.println("SQLException: " + e.getMessage());
+	// System.out.println("SQLState: " + e.getSQLState());
+	// System.out.println("VendorError: " + e.getErrorCode());
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// public void insertVehicle(String name, String url, int family)
+	// {
+	// // clean the in bound data before putting it into the database
+	// String cleanName = sanitizeName(name);
+	// String cleanURL = sanitizeURL(url);
+	// int cleanFamily = sanitizeFamily(family);
+	//
+	// try
+	// {
+	// // this.conn1.setAutoCommit(false);
+	// /**
+	// * using the prepared statement note, using only sanitized data this
+	// * will avoid sql injection attacks
+	// */
+	//
+	// this.insertVehicle.setString(1, cleanName);
+	// this.insertVehicle.setString(2, cleanURL);
+	// this.insertVehicle.setInt(3, cleanFamily);
+	// insertVehicle.execute();
+	// } catch (SQLException e)
+	// {
+	// System.out.println("error on insert of vehicle " + e);
+	// System.out.println("SQLException: " + e.getMessage());
+	// System.out.println("SQLState: " + e.getSQLState());
+	// System.out.println("VendorError: " + e.getErrorCode());
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// public void getVehicle()
+	// {
+	// try
+	// {
+	// ResultSet resultSet = statement
+	// .executeQuery("SELECT * from vehicle");
+	//
+	// while (resultSet.next())
+	// {
+	// // the following statement also works. Showing options only
+	// // System.out.println(resultSet.getString(1) + "\t" +
+	// resultSet.getString(2) + " \t" + resultSet.getString(3));
+	// String make = resultSet.getString("make"); // Note, these
+	// // are
+	// // backwards
+	// // to show
+	// int id = resultSet.getInt("vehicleId"); // that the order doesn't
+	// // matter. It is using
+	// // the field name
+	// // (column name)
+	// String model = resultSet.getString("model");
+	// int year = resultSet.getInt("year");
+	// String color = resultSet.getString("color");
+	// System.out.println(id + " " + make + " " + model + " " + year + " " +
+	// color);
+	// }
+	// } catch (SQLException ex)
+	// {
+	// // // handle any errors
+	// System.out.println("SQLException: " + ex.getMessage());
+	// System.out.println("SQLState: " + ex.getSQLState());
+	// System.out.println("VendorError: " + ex.getErrorCode());
+	// ex.printStackTrace();
+	// }
+	// }
+	//
+	// public void getVehicleInOrder()
+	// {
+	// try
+	// {
+	// ResultSet resultSet = statement
+	// .executeQuery("SELECT * FROM vehicle order by make, model");
+	//
+	// while (resultSet.next())
+	// {
+	// // the following statement also works. Showing options only
+	// // System.out.println(resultSet.getString(1) + "\t" +
+	// resultSet.getString(2) + " \t" + resultSet.getString(3));
+	// String make = resultSet.getString("make"); // Note, these
+	// // are
+	// // backwards
+	// // to show
+	// int id = resultSet.getInt("vehicleId"); // that the order doesn't
+	// // matter. It is using
+	// // the field name
+	// // (column name)
+	// String model = resultSet.getString("model");
+	// int year = resultSet.getInt("year");
+	// String color = resultSet.getString("color");
+	// System.out.println(id + " " + make + " " + model + " " + year + " " +
+	// color);
+	// }
+	// } catch (SQLException ex)
+	// {
+	// // // handle any errors
+	// System.out.println("SQLException: " + ex.getMessage());
+	// System.out.println("SQLState: " + ex.getSQLState());
+	// System.out.println("VendorError: " + ex.getErrorCode());
+	// ex.printStackTrace();
+	// }
+	// }
+	//
+	// public void getVehiclebyMake(String Make)
+	// {
+	// System.out.println("~~~~~~ vehicle by Make");
+	// try
+	// {
+	// this.getVehicleByMake.setString(1, Make);
+	// ResultSet resultSet = this.getVehicleByMake.executeQuery();
+	//
+	// while (resultSet.next())
+	// {
+	// String make = resultSet.getString("make");
+	// int id = resultSet.getInt("vehicleId");
+	// String model = resultSet.getString("model");
+	// int year = resultSet.getInt("year");
+	// String color = resultSet.getString("color");
+	// System.out.println(id + " " + make + " " + model + " " + year + " " +
+	// color);
+	// }
+	// } catch (SQLException ex)
+	// {
+	// // // handle any errors
+	// System.out.println("SQLException: " + ex.getMessage());
+	// System.out.println("SQLState: " + ex.getSQLState());
+	// System.out.println("VendorError: " + ex.getErrorCode());
+	// ex.printStackTrace();
+	// }
+	// }
+	//
+	// public void getVehiclebyId(int ID)
+	// {
+	// System.out.println("~~~~~~ vehicle by id");
+	// try
+	// {
+	// this.getVehicleById.setInt(1, ID);
+	// ResultSet resultSet = this.getVehicleById.executeQuery();
+	//
+	// while (resultSet.next())
+	// {
+	// String make = resultSet.getString("make");
+	// int id = resultSet.getInt("vehicleId");
+	// String model = resultSet.getString("model");
+	// int year = resultSet.getInt("year");
+	// String color = resultSet.getString("color");
+	// System.out.println(id + " " + make + " " + model + " " + year + " " +
+	// color);
+	// }
+	// } catch (SQLException ex)
+	// {
+	// // handle any errors
+	// System.out.println("SQLException: " + ex.getMessage());
+	// System.out.println("SQLState: " + ex.getSQLState());
+	// System.out.println("VendorError: " + ex.getErrorCode());
+	// ex.printStackTrace();
+	// }
+	// }
 
-	private String sanitizeName(String name)
+	private String sanitizeUserName(String name)
 	{
 		// TODO sanitize name string
 		/*
@@ -276,6 +377,12 @@ public class DbAccess
 		 * thoughts - make sure it looks like a url - regular expression?
 		 */
 		return url;
+	}
+
+	private String sanitizeEmail(String email)
+	{
+		// TODO sanitize email string - use regular expression?
+		return email;
 	}
 
 	private int sanitizeFamily(int family)

@@ -25,10 +25,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		dbHandle = DbAccess.getInstance();
-//		dbHandle.getVehicle();
-//		dbHandle.getVehicleInOrder();
-//		dbHandle.getVehiclebyMake("Toyota");
-//		dbHandle.getVehiclebyId(3);
+
 //		dbHandle.getAllUser();
 //		System.out.println(dbHandle.getSalt("Lacemaker"));
 //		System.out.println(dbHandle.getPass("Lacemaker"));

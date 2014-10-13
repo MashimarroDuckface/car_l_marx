@@ -21,14 +21,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import security.PasswordEncrypt;
-
 public class DbAccess
 {
 	private Connection conn;
 	private java.sql.Statement statement;
 
-	// Prepared statemets
+	// Prepared statements
 	// private PreparedStatement insertVehicle;
 	private PreparedStatement insertUser;
 	private PreparedStatement getAllUser;
@@ -94,12 +92,6 @@ public class DbAccess
 			// String deleteVehicleString =
 			// "DELETE FROM `car_l_marx`.`vehicle` WHERE `vehicleID` = ?";
 			// deleteVehicle = conn.prepareStatement(deleteVehicleString);
-			// String getVehicleByMakeString =
-			// "SELECT * FROM `car_l_marx`.`vehicle` WHERE `make` = ? ORDER BY `model";
-			// getVehicleByMake = conn.prepareStatement(getVehicleByMakeString);
-			// String getVehicleByIdString =
-			// "SELECT * FROM `car_l_marx`.`vehicle` WHERE `vehicleId` = ? ORDER BY `model";
-			// getVehicleById = conn.prepareStatement(getVehicleByIdString);
 
 			// User statements
 			String insertUserString = "INSERT INTO `car_l_marx`.`user` (`idUser`, `userName`, `userPassword`, `fName`, `lNname`, `userEmail`) VALUES (NULL, ?, ?, ?, ?, ?)";
@@ -233,42 +225,6 @@ public class DbAccess
 	// }
 	// }
 	//
-	// public void getVehicle()
-	// {
-	// try
-	// {
-	// ResultSet resultSet = statement
-	// .executeQuery("SELECT * from vehicle");
-	//
-	// while (resultSet.next())
-	// {
-	// // the following statement also works. Showing options only
-	// // System.out.println(resultSet.getString(1) + "\t" +
-	// resultSet.getString(2) + " \t" + resultSet.getString(3));
-	// String make = resultSet.getString("make"); // Note, these
-	// // are
-	// // backwards
-	// // to show
-	// int id = resultSet.getInt("vehicleId"); // that the order doesn't
-	// // matter. It is using
-	// // the field name
-	// // (column name)
-	// String model = resultSet.getString("model");
-	// int year = resultSet.getInt("year");
-	// String color = resultSet.getString("color");
-	// System.out.println(id + " " + make + " " + model + " " + year + " " +
-	// color);
-	// }
-	// } catch (SQLException ex)
-	// {
-	// // // handle any errors
-	// System.out.println("SQLException: " + ex.getMessage());
-	// System.out.println("SQLState: " + ex.getSQLState());
-	// System.out.println("VendorError: " + ex.getErrorCode());
-	// ex.printStackTrace();
-	// }
-	// }
-	//
 	// public void getVehicleInOrder()
 	// {
 	// try
@@ -289,34 +245,6 @@ public class DbAccess
 	// // matter. It is using
 	// // the field name
 	// // (column name)
-	// String model = resultSet.getString("model");
-	// int year = resultSet.getInt("year");
-	// String color = resultSet.getString("color");
-	// System.out.println(id + " " + make + " " + model + " " + year + " " +
-	// color);
-	// }
-	// } catch (SQLException ex)
-	// {
-	// // // handle any errors
-	// System.out.println("SQLException: " + ex.getMessage());
-	// System.out.println("SQLState: " + ex.getSQLState());
-	// System.out.println("VendorError: " + ex.getErrorCode());
-	// ex.printStackTrace();
-	// }
-	// }
-	//
-	// public void getVehiclebyMake(String Make)
-	// {
-	// System.out.println("~~~~~~ vehicle by Make");
-	// try
-	// {
-	// this.getVehicleByMake.setString(1, Make);
-	// ResultSet resultSet = this.getVehicleByMake.executeQuery();
-	//
-	// while (resultSet.next())
-	// {
-	// String make = resultSet.getString("make");
-	// int id = resultSet.getInt("vehicleId");
 	// String model = resultSet.getString("model");
 	// int year = resultSet.getInt("year");
 	// String color = resultSet.getString("color");
@@ -370,27 +298,9 @@ public class DbAccess
 		return name;
 	}
 
-	private String sanitizeURL(String url)
-	{
-		// TODO sanitize url string
-		/*
-		 * thoughts - make sure it looks like a url - regular expression?
-		 */
-		return url;
-	}
-
 	private String sanitizeEmail(String email)
 	{
 		// TODO sanitize email string - use regular expression?
 		return email;
-	}
-
-	private int sanitizeFamily(int family)
-	{
-		// TODO sanitize int family
-		/*
-		 * thoughts - make sure that it is in the family file
-		 */
-		return family;
 	}
 }

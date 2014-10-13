@@ -25,18 +25,13 @@ import javax.swing.JButton;
 import java.awt.Color;
 
 import javax.swing.border.BevelBorder;
-import javax.swing.AbstractAction;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.Action;
 
 import dbAccess.DbAccess;
 import security.PasswordEncrypt;
-
-import java.awt.event.ActionListener;
 
 public class LoginFrame extends JFrame
 {
@@ -57,15 +52,13 @@ public class LoginFrame extends JFrame
 	private char[] userPassword;
 	
 	public LoginPanel loginImage;
-	private final Action action = new SwingAction();
-	private JButton btnNewButton_1;
 
 	/**
 	 * Create the frame.
 	 */
-	public LoginFrame(DbAccess dbHandle)
+	public LoginFrame(DbAccess dBHandle)
 	{
-		this.dbHandle = dbHandle;
+		dbHandle = dBHandle;
 		
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,16 +86,6 @@ public class LoginFrame extends JFrame
 		lblNewLabel.setBounds(43, 95, 61, 16);
 		contentPane.add(lblNewLabel);
 		
-		btnLoginSubmit = new JButton("Forgot Password");
-		btnLoginSubmit.setBackground(new Color(255, 140, 0));
-		btnLoginSubmit.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				SubmitButtonLogin();
-			}
-		});
-		contentPane.add(btnLoginSubmit);
-		
 		paintLoginPanel();
 	}
 	
@@ -126,21 +109,33 @@ public class LoginFrame extends JFrame
 		});
 		contentPane.add(btnLoginSubmit);
 		
-		btnNewButton_1 = new JButton("Forgot Password");
-		btnNewButton_1.setBounds(53, 220, 137, 29);
-		contentPane.add(btnNewButton_1);
+		btnForgotPassword = new JButton("Forgot Password");
+		btnForgotPassword.setBounds(53, 220, 137, 29);
+		btnForgotPassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				forgotPassword();
+			}
+		});
+		
+		contentPane.add(btnForgotPassword);
 		
 	}
 	
+	private void forgotPassword()
+	{
+		//  TODO  need to create a new form for user to enter their email address.  We will then 
+		//  TODO  send a link to update password
+	}
 	private boolean SubmitButtonLogin()
 	{
 		userName = this.txtUserName.getText();
 		userPassword = this.txtUserPassword.getPassword();
 		String userPassString = userPassword.toString();
 		
-		String salt = this.dbHandle.getSalt(userName);
+		String salt = dbHandle.getSalt(userName);
 		System.out.println(userName + " " + salt);
-		String dbPass = this.dbHandle.getPass(userName);
+		String dbPass = dbHandle.getPass(userName);
 		System.out.println(userName + " " + dbPass + " " + userPassString);
 		
 		PasswordEncrypt pass = new PasswordEncrypt();
@@ -150,13 +145,5 @@ public class LoginFrame extends JFrame
 		return (encPassword.equals(userPassString));    //  will return true if the password matches what is on file
 		
 	}
-	
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
+
 }

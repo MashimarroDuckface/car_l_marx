@@ -17,7 +17,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.io.File;
 import java.awt.Color;
 
 public class LoginPanel extends JPanel

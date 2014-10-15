@@ -25,7 +25,7 @@ public class PasswordEncrypt
 		
 	}
 	
-    public String getSecurePassword(String userPassword, String salt)
+    public static String getSecurePassword(String userPassword, String salt)
     {
         String generatedPassword = null;
         try {

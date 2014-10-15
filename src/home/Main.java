@@ -31,7 +31,7 @@ public class Main
 //		System.out.println(dbHandle.getPass("Lacemaker"));
 		
 		
-		LoginFrame login = new LoginFrame(dbHandle);
+		LoginFrame login = new LoginFrame();
 		login.setTitle("Car-L-Marx");
 		login.setLocationRelativeTo(null);
 		login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

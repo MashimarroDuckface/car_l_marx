@@ -27,15 +27,10 @@ public class DbAccess
 	private java.sql.Statement statement;
 
 	// Prepared statements
-	// private PreparedStatement insertVehicle;
 	private PreparedStatement insertUser;
 	private PreparedStatement getAllUser;
 	private PreparedStatement getUserSalt;
 	private PreparedStatement getUserPass;
-
-	// private PreparedStatement deleteVehicle;
-	// private PreparedStatement getVehicleByMake;
-	// private PreparedStatement getVehicleById;
 
 	/**
 	 * Note that the constructor is listed as private. That will disallow the

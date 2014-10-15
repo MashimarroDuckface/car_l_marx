@@ -29,13 +29,11 @@ import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
 import dbAccess.DbAccess;
 import security.PasswordEncrypt;
 
 public class LoginFrame extends JFrame
 {
-
 	/**
 	 * 
 	 */
@@ -56,9 +54,9 @@ public class LoginFrame extends JFrame
 	/**
 	 * Create the frame.
 	 */
-	public LoginFrame(DbAccess dBHandle)
+	public LoginFrame()
 	{
-		dbHandle = dBHandle;
+		dbHandle = DbAccess.getInstance();
 		
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -131,18 +129,22 @@ public class LoginFrame extends JFrame
 	{
 		userName = this.txtUserName.getText();
 		userPassword = this.txtUserPassword.getPassword();
-		String userPassString = userPassword.toString();
+		
+		String stringPassword = new String(userPassword);
+			
+		userName = this.txtUserName.getText();
+		userPassword = this.txtUserPassword.getPassword();
 		
 		String salt = dbHandle.getSalt(userName);
-		System.out.println(userName + " " + salt);
 		String dbPass = dbHandle.getPass(userName);
-		System.out.println(userName + " " + dbPass + " " + userPassString);
+		System.out.println(userName  + " salt from server " + salt);
+		System.out.println(userName + " from server  - password-->" + dbPass + " password from input-->" + stringPassword);
 		
 		PasswordEncrypt pass = new PasswordEncrypt();
-		String encPassword = pass.getSecurePassword(userPassString, salt);
-		System.out.println(encPassword);
+		String encPassword = pass.getSecurePassword(stringPassword, salt);
+		System.out.println("Password from passencypt--> " + encPassword);
 		
-		return (encPassword.equals(userPassString));    //  will return true if the password matches what is on file
+		return (encPassword.equals(dbPass));    //  will return true if the password matches what is on file
 		
 	}
 

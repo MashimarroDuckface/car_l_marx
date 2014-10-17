@@ -48,6 +48,7 @@ public class LoginFrame extends JFrame
 	
 	private String userName;
 	private char[] userPassword;
+	private boolean goodLogin = false;
 	
 	public LoginPanel loginImage;
 
@@ -118,6 +119,11 @@ public class LoginFrame extends JFrame
 		
 		contentPane.add(btnForgotPassword);
 		
+		int i = 0;
+		
+		if ( i >= 0 )
+			i++;
+		
 	}
 	
 	private void forgotPassword()
@@ -125,26 +131,23 @@ public class LoginFrame extends JFrame
 		//  TODO  need to create a new form for user to enter their email address.  We will then 
 		//  TODO  send a link to update password
 	}
-	private boolean SubmitButtonLogin()
+	
+	private void SubmitButtonLogin()
 	{
 		userName = this.txtUserName.getText();
 		userPassword = this.txtUserPassword.getPassword();
-		
 		String stringPassword = new String(userPassword);
-			
-		userName = this.txtUserName.getText();
-		userPassword = this.txtUserPassword.getPassword();
 		
 		String salt = dbHandle.getSalt(userName);
 		String dbPass = dbHandle.getPass(userName);
-		System.out.println(userName  + " salt from server " + salt);
-		System.out.println(userName + " from server  - password-->" + dbPass + " password from input-->" + stringPassword);
+//		System.out.println(userName  + " salt from server " + salt);
+//		System.out.println(userName + " from server  - password-->" + dbPass + " password from input-->" + stringPassword);
 		
 		PasswordEncrypt pass = new PasswordEncrypt();
 		String encPassword = pass.getSecurePassword(stringPassword, salt);
-		System.out.println("Password from passencypt--> " + encPassword);
+	//	System.out.println("Password from passencypt--> " + encPassword);
 		
-		return (encPassword.equals(dbPass));    //  will return true if the password matches what is on file
+		this.goodLogin = (encPassword.equals(dbPass));   //  will be true if the user passed the login
 		
 	}
 

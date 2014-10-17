@@ -25,7 +25,7 @@ public class PasswordEncrypt
 		
 	}
 	
-    public static String getSecurePassword(String userPassword, String salt)
+    public String getSecurePassword(String userPassword, String salt)
     {
         String generatedPassword = null;
         try {
@@ -52,7 +52,7 @@ public class PasswordEncrypt
     }
     
     //Add salt
-    public static String getSalt() throws NoSuchAlgorithmException, NoSuchProviderException
+    public String getSalt() throws NoSuchAlgorithmException, NoSuchProviderException
     {
         //Always use a SecureRandom generator
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
@@ -61,6 +61,6 @@ public class PasswordEncrypt
         //Get a random salt
         sr.nextBytes(salt);
         //return salt
-        return salt.toString();
+        return salt.toString();   //  I realize that this is returning the memory address, but it seems to make a lovely salt anyway
     }
 }

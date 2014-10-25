@@ -15,8 +15,8 @@ package home;
 
 import javax.swing.JFrame;
 
+import model.DbAccess;
 import views.LoginFrame;
-import dbAccess.DbAccess;
 
 public class Main
 {
@@ -26,10 +26,13 @@ public class Main
 	{
 		dbHandle = DbAccess.getInstance();
 
+		/**
+		 *   TODO  Some thoughts - when the program is started up, launch threads
+		 *   TODO  to get basic data from the db.  (make, model, etc) 
+		 *   TODO  this should speed up the process for the user,
+		 *   TODO  while they are logging in, we can be loading data in the background
+		  */
 //		dbHandle.getAllUser();
-//		System.out.println(dbHandle.getSalt("Lacemaker"));
-//		System.out.println(dbHandle.getPass("Lacemaker"));
-		
 		
 		LoginFrame login = new LoginFrame();
 		login.setTitle("Car-L-Marx");

@@ -31,7 +31,7 @@ public class DbAccess
 	private PreparedStatement getAllUser;
 	private PreparedStatement getUserSalt;
 	private PreparedStatement getUserPass;
-
+	private PreparedStatement getUserVehicles;
 	/**
 	 * Note that the constructor is listed as private. That will disallow the
 	 * instantiation of objects without going through the singleton pattern
@@ -97,6 +97,13 @@ public class DbAccess
 			getUserSalt = conn.prepareStatement(getUserSaltString);
 			String getUserPassString = "SELECT `userPassword` FROM  `user` WHERE  `userName` LIKE  ?";
 			getUserPass = conn.prepareStatement(getUserPassString);
+			String getUserVehiclesString = "SELECT idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  `mileage` ";
+				getUserVehiclesString += " FROM  `vehicleTable` ";
+				getUserVehiclesString +=	" INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake";
+				getUserVehiclesString +=	" INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel";
+				getUserVehiclesString +=	" INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor";
+				getUserVehiclesString +=	" WHERE idUser =?";
+			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
 
 		} catch (SQLException e)
 		{
@@ -113,6 +120,7 @@ public class DbAccess
 			ResultSet resultSet = this.getUserSalt.executeQuery();
 			while (resultSet.next())
 			{
+	//			System.out.println ("inside DbAccess - getSalt " + resultSet.getString("passSalt"));
 				return resultSet.getString("passSalt");
 			}
 		} catch (SQLException e)
@@ -135,6 +143,7 @@ public class DbAccess
 			ResultSet resultSet = this.getUserPass.executeQuery();
 			while (resultSet.next())
 			{
+	//			System.out.println ("inside DbAccess - getPass " + resultSet.getString("userPassword"));
 				return resultSet.getString("userPassword");
 			}
 		} catch (SQLException e)
@@ -171,6 +180,36 @@ public class DbAccess
 			System.out.println("VendorError: " + ex.getErrorCode());
 			ex.printStackTrace();
 		}
+	}
+	
+	private int getUserId(String userName)
+	{
+		return 1;
+	}
+	
+	public void getUserVehicle(String userName)
+	{
+		String cleanUserName = sanitizeUserName(userName);
+		int userId = getUserId(userName);
+		try
+		{
+			this.getUserVehicles.setInt(1, userId);
+			ResultSet resultSet = this.getUserVehicles.executeQuery();
+			while (resultSet.next())
+			{
+				//  TODO  loop through result set getting all vehicles.  Set them into an array
+	//			System.out.println ("inside DbAccess - getSalt " + resultSet.getString("passSalt"));
+			//	return resultSet.getString("passSalt");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of user salt " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("User Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+//		return null;
 	}
 
 	// public void deleteVehicle(String name)

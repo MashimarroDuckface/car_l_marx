@@ -24,13 +24,15 @@ public class LogonController
 {
 	private LoginFrame loginView;
 	private DbAccess dbHandle;
+	public MainController mController;
 	
 	private boolean goodLogin = false;
 	
-	public LogonController(LoginFrame loginView, DbAccess dbHandle)
+	public LogonController(LoginFrame loginView, DbAccess dbHandle, MainController mController)
 	{	
 		this.loginView = loginView;
 		this.dbHandle = dbHandle;
+		this.mController = mController;
 	}
 	
 	public boolean startLogon()
@@ -69,21 +71,23 @@ public class LogonController
 			
 			String salt = dbHandle.getSalt(userName);
 			String dbPass = dbHandle.getPass(userName);
-			System.out.println(userName  + " salt from server " + salt);
+			
+//			System.out.println(userName  + " salt from server " + salt);
 //			System.out.println(userName + " from server  - password-->" + dbPass + " password from input-->" + stringPassword);
 			
 			PasswordEncrypt pass = new PasswordEncrypt();
 			String encPassword = pass.getSecurePassword(stringPassword, salt);
 			
 			goodLogin = (encPassword.equals(dbPass));   //  will be true if the user passed the login
+			System.out.println("Good user ? " + goodLogin);
 			
 			if (goodLogin)
 			{
 				loginView.setVisible(false); //you can't see me!
 				loginView.dispose(); //Destroy the JFrame object
+				mController.goodUser(userName);
 			}
 			
-			System.out.println("Good user ? " + goodLogin);
 		}
 	}
 	

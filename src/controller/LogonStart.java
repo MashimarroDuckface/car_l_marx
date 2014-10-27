@@ -22,21 +22,22 @@ public class LogonStart
 	private LoginFrame loginView;
 	private DbAccess DbHandle;
 	private LogonController logonController;
+	private MainController mController;
 	
-	public LogonStart()
+	public LogonStart(MainController mController)
 	{
 		loginView = new LoginFrame(); 
 		DbHandle = DbAccess.getInstance();
-		logonController  = new LogonController (loginView, DbHandle);
+		this.mController  = mController;
+		logonController  = new LogonController( loginView,  DbHandle,  mController);
 		
 	//	boolean good = logonGetGoing();
 	}
 	
-	public boolean logonGetGoing()
+	public void logonGetGoing()
 	{
 		loginView.setVisible(true);
 		this.goodLogon = logonController.startLogon();
-		return this.goodLogon;
 	}
 	
 	public boolean getGoodLogon()

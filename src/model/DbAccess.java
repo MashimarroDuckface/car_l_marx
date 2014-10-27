@@ -89,13 +89,13 @@ public class DbAccess
 			// deleteVehicle = conn.prepareStatement(deleteVehicleString);
 
 			// User statements
-			String insertUserString = "INSERT INTO `car_l_marx`.`user` (`idUser`, `userName`, `userPassword`, `fName`, `lNname`, `userEmail`) VALUES (NULL, ?, ?, ?, ?, ?)";
+			String insertUserString = "INSERT INTO `car_l_marx`.`userTable` (`idUser`, `userName`, `userPassword`, `fName`, `lNname`, `userEmail`) VALUES (NULL, ?, ?, ?, ?, ?)";
 			insertUser = conn.prepareStatement(insertUserString);
-			String getAllUserString = "SELECT * FROM `user`";
+			String getAllUserString = "SELECT * FROM `userTable`";
 			getAllUser = conn.prepareStatement(getAllUserString);
-			String getUserSaltString = "SELECT `passSalt` FROM  `user` WHERE  `userName` LIKE  ?";
+			String getUserSaltString = "SELECT `passSalt` FROM  `userTable` WHERE  `userName` LIKE  ?";
 			getUserSalt = conn.prepareStatement(getUserSaltString);
-			String getUserPassString = "SELECT `userPassword` FROM  `user` WHERE  `userName` LIKE  ?";
+			String getUserPassString = "SELECT `userPassword` FROM  `userTable` WHERE  `userName` LIKE  ?";
 			getUserPass = conn.prepareStatement(getUserPassString);
 			String getUserVehiclesString = "SELECT idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  `mileage` ";
 				getUserVehiclesString += " FROM  `vehicleTable` ";
@@ -120,7 +120,7 @@ public class DbAccess
 			ResultSet resultSet = this.getUserSalt.executeQuery();
 			while (resultSet.next())
 			{
-	//			System.out.println ("inside DbAccess - getSalt " + resultSet.getString("passSalt"));
+//				System.out.println ("inside DbAccess - getSalt " + resultSet.getString("passSalt"));
 				return resultSet.getString("passSalt");
 			}
 		} catch (SQLException e)

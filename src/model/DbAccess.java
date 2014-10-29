@@ -102,7 +102,7 @@ public class DbAccess
 				getUserVehiclesString +=	" INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake";
 				getUserVehiclesString +=	" INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel";
 				getUserVehiclesString +=	" INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor";
-				getUserVehiclesString +=	" WHERE idUser =?";
+				getUserVehiclesString +=	" WHERE userName =?";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
 
 		} catch (SQLException e)
@@ -198,7 +198,6 @@ public class DbAccess
 			while (resultSet.next())
 			{
 				//  TODO  loop through result set getting all vehicles.  Set them into an array
-	//			System.out.println ("inside DbAccess - getSalt " + resultSet.getString("passSalt"));
 			//	return resultSet.getString("passSalt");
 			}
 		} catch (SQLException e)

@@ -26,6 +26,7 @@ public class VehicleSummary extends JFrame
 {
 
 	private JPanel contentPane;
+	private VehicleTablePanel carPanel;
 	private Image bgimage = null;
 
 
@@ -37,22 +38,25 @@ public class VehicleSummary extends JFrame
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 800);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
-		contentPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(211, 211, 211), new Color(119, 136, 153)));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		carPanel = new VehicleTablePanel();
+		carPanel.setBackground(new Color(255, 255, 255));
+		carPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(211, 211, 211), new Color(119, 136, 153)));
+		setContentPane(carPanel);
+		carPanel.setLayout(null);
 		
-		JPanel panel = new JPanel();
-		MediaTracker mt = new MediaTracker(this);
-		bgimage = Toolkit.getDefaultToolkit().getImage("images/keys.jpg");
-		mt.addImage(bgimage, 0);
-		try {
-			mt.waitForAll();
-		} catch (InterruptedException e ) {
-			e.printStackTrace();
-		}
-		panel.setBounds(0, 0, 1000, 800);
-		contentPane.add(panel);
+//		VehicleTablePanel panel = new VehicleTablePanel();
+//		MediaTracker mt = new MediaTracker(this);
+//		bgimage = Toolkit.getDefaultToolkit().getImage("images/keys.jpg");
+//		mt.addImage(bgimage, 0);
+//		try {
+//			mt.waitForAll();
+//		} catch (InterruptedException e ) {
+//			e.printStackTrace();
+//		}
+		carPanel.setBounds(0, 0, 1000, 800);
+		contentPane.add(carPanel);
+		
+		pack();
+		setVisible(true);
 	}
 }

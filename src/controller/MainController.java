@@ -24,9 +24,11 @@ public class MainController
 
 	public MainController()
 	{
-		LogonStart logon = new LogonStart(this);
+//		LogonStart logon = new LogonStart(this);
 
-		logon.logonGetGoing();
+	//	logon.logonGetGoing();
+		
+		goodUser("Lacemaker");
 
 	}
 

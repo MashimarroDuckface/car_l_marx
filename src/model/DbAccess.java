@@ -102,7 +102,7 @@ public class DbAccess
 				getUserVehiclesString +=	" INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake";
 				getUserVehiclesString +=	" INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel";
 				getUserVehiclesString +=	" INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor";
-				getUserVehiclesString +=	" WHERE userName =?";
+				getUserVehiclesString +=	" WHERE userName LIKE ?";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
 
 		} catch (SQLException e)
@@ -190,15 +190,15 @@ public class DbAccess
 	public void getUserVehicle(String userName)
 	{
 		String cleanUserName = sanitizeUserName(userName);
-		int userId = getUserId(userName);
 		try
 		{
-			this.getUserVehicles.setInt(1, userId);
+			this.getUserVehicles.setString(1, cleanUserName);
 			ResultSet resultSet = this.getUserVehicles.executeQuery();
 			while (resultSet.next())
 			{
 				//  TODO  loop through result set getting all vehicles.  Set them into an array
-			//	return resultSet.getString("passSalt");
+				System.out.println(resultSet.getInt("idvehicle") + " " + resultSet.getString("makeTable.make") + " " + resultSet.getString("modelTable.model") + " " + resultSet.getString( "colorTable.color") + " " + resultSet.getString("licensePlate")  + " " + resultSet.getString("mileage"));
+		//		SELECT idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  `mileage` 
 			}
 		} catch (SQLException e)
 		{

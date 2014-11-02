@@ -14,11 +14,13 @@
 
 package model;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class DbAccess
@@ -101,13 +103,10 @@ public class DbAccess
 			getUserSalt = conn.prepareStatement(getUserSaltString);
 			String getUserPassString = "SELECT `userPassword` FROM  `userTable` WHERE  `userName` LIKE  ?";
 			getUserPass = conn.prepareStatement(getUserPassString);
-			String getUserVehiclesString = "SELECT idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  `mileage` ";
-			getUserVehiclesString += " FROM  `vehicleTable` ";
-			getUserVehiclesString += " INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake";
-			getUserVehiclesString += " INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel";
-			getUserVehiclesString += " INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor";
-			getUserVehiclesString += " WHERE userName LIKE ?";
+			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
+//			String getUserVehiclesString = "SELECT count(*) as rowCount, idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
+//			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
 
 		} catch (SQLException e)
 		{
@@ -124,8 +123,8 @@ public class DbAccess
 			ResultSet resultSet = this.getUserSalt.executeQuery();
 			while (resultSet.next())
 			{
-				// System.out.println ("inside DbAccess - getSalt " +
-				// resultSet.getString("passSalt"));
+				System.out.println ("inside DbAccess - getSalt " +
+				 resultSet.getString("passSalt"));
 				return resultSet.getString("passSalt");
 			}
 		} catch (SQLException e)
@@ -202,7 +201,7 @@ public class DbAccess
 			}
 		} catch (SQLException e)
 		{
-			System.out.println("error on fetch of user salt " + e);
+			System.out.println("error on fetch of valid user" + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("User Table: " + e.getErrorCode());
@@ -211,13 +210,16 @@ public class DbAccess
 		return false; // did not get the user
 	}
 
-	public void getUserVehicle(String userName)
+	public void test(String userName)
 	{
+		
+		System.out.println("**************************************************DbAccess - getUserVehicle");
 		String cleanUserName = sanitizeUserName(userName);
 		try
 		{
 			this.getUserVehicles.setString(1, cleanUserName);
 			ResultSet resultSet = this.getUserVehicles.executeQuery();
+			
 			while (resultSet.next())
 			{
 				// TODO loop through result set getting all vehicles. Set them
@@ -227,19 +229,56 @@ public class DbAccess
 						+ resultSet.getString("modelTable.model") + " "
 						+ resultSet.getString("colorTable.color") + " "
 						+ resultSet.getString("licensePlate") + " "
-						+ resultSet.getString("mileage"));
-				// SELECT idvehicle, makeTable.make, modelTable.model,
-				// colorTable.color, licensePlate, `mileage`
+						+ resultSet.getInt("mileage") );
+				
 			}
 		} catch (SQLException e)
 		{
-			System.out.println("error on fetch of user salt " + e);
+			System.out.println("error on fetch of getUserVehicles " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
-			System.out.println("User Table: " + e.getErrorCode());
+			System.out.println("Vehicles Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
-		// return null;
+	}
+	
+	public ArrayList<VehiclesObject> getUserVehicle(String userName)
+	{
+		
+		System.out.println("**************************************************DbAccess - getUserVehicle");
+		String cleanUserName = sanitizeUserName(userName);
+		try
+		{
+			this.getUserVehicles.setString(1, cleanUserName);
+			ResultSet resultSet = this.getUserVehicles.executeQuery();
+			ArrayList<VehiclesObject> vehicleList = new ArrayList<VehiclesObject>();
+			
+	//		System.out.println("Vehicles row count " + resultSet.getInt("rowCount"));
+			
+			while (resultSet.next())
+			{
+				// TODO loop through result set getting all vehicles. Set them
+				// into an array
+				System.out.println(resultSet.getInt("idvehicle") + " "
+						+ resultSet.getString("makeTable.make") + " "
+						+ resultSet.getString("modelTable.model") + " "
+						+ resultSet.getString("colorTable.color") + " "
+						+ resultSet.getString("licensePlate") + " "
+						+ resultSet.getInt("mileage") + " number of rows returned  " );
+				
+				VehiclesObject vehicle = new VehiclesObject(resultSet.getInt("idvehicle") , resultSet.getString("makeTable.make"), resultSet.getString("modelTable.model"), resultSet.getString("colorTable.color"), resultSet.getString("licensePlate"), resultSet.getInt("mileage"));
+				vehicleList.add(vehicle);
+			}
+			return vehicleList;
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of getUserVehicles " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Vehicles Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void insertNewUser(String userName, String password, String salt,

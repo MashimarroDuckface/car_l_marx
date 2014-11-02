@@ -13,6 +13,8 @@
 */
 package controller;
 
+import java.util.ArrayList;
+
 import views.*;
 import model.*;
 
@@ -31,18 +33,16 @@ public class VehicleController
 	
 	public void startVehicle()
 	{
-		
+		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle("Lacemaker");
+		//  This is how you can read the data back from the array list
+		for (VehiclesObject v:vehicleList)
+		{
+			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
+		}
 	}
 	
 	private void getVehicleData()
 	{
-		/*SELECT idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  `mileage` 
-FROM  `vehicleTable` 
-INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake
-INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel
-INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor
-WHERE idUser =1
 		
-		*/
 	}
 }

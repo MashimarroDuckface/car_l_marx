@@ -13,21 +13,11 @@
  */
 package views;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import java.awt.Color;
-
-import javax.swing.JScrollBar;
-import javax.swing.BoxLayout;
-
-import java.awt.Component;
 
 public class VehicleTablePanel extends JPanel
 {

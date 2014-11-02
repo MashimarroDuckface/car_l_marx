@@ -13,6 +13,7 @@
 */
 package controller;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,6 +26,7 @@ public class LogonController
 	private LoginFrame loginView;
 	private DbAccess dbHandle;
 	public MainController mController;
+	public LogonController lController;
 	
 	private boolean goodLogin = false;
 	
@@ -33,6 +35,7 @@ public class LogonController
 		this.loginView = loginView;
 		this.dbHandle = dbHandle;
 		this.mController = mController;
+		this.lController = this;
 	}
 	
 	public boolean startLogon()
@@ -53,39 +56,54 @@ public class LogonController
 	
 	public class SubmitListener implements ActionListener 
 	{
-		public void actionPerformed(ActionEvent e) {
-			System.out.println("Inside SubmitListener");
+		public void actionPerformed(ActionEvent e) 
+		{
 			String userName = loginView.getUserName();
-			System.out.println("User " + userName);
 			
 			char[] userPassword = loginView.getPassword();
 			String stringPassword = new String(userPassword);
 			
-			if ( (userName.isEmpty()) || (userPassword.length == 0))   //  No input!
+			if (userName.isEmpty())
 			{
-				System.out.println("everything is empty");
-				
-				goodLogin = false;
-				return; 
+				loginView.lblUsrId.setText("User Name is blank");
+				loginView.lblUsrId.setForeground(Color.RED);
+				return;
+			}
+			
+			if (!dbHandle.validUser(userName))
+			{
+				loginView.lblUsrId.setText("User Name is not on file");
+				loginView.lblUsrId.setForeground(Color.RED);
+				return;
+			}
+			
+			if (userPassword.length == 0)
+			{
+				loginView.lblUsrId.setForeground(Color.BLACK);
+				loginView.lblPassword.setText("Password is blank");
+				loginView.lblPassword.setForeground(Color.RED);
+				return;
 			}
 			
 			String salt = dbHandle.getSalt(userName);
 			String dbPass = dbHandle.getPass(userName);
 			
-//			System.out.println(userName  + " salt from server " + salt);
-//			System.out.println(userName + " from server  - password-->" + dbPass + " password from input-->" + stringPassword);
-			
 			PasswordEncrypt pass = new PasswordEncrypt();
 			String encPassword = pass.getSecurePassword(stringPassword, salt);
 			
 			goodLogin = (encPassword.equals(dbPass));   //  will be true if the user passed the login
-			System.out.println("Good user ? " + goodLogin);
 			
 			if (goodLogin)
 			{
 				loginView.setVisible(false); //you can't see me!
 				loginView.dispose(); //Destroy the JFrame object
 				mController.goodUser(userName);
+			}
+			else   //  Logon was not successful
+			{
+				loginView.lblPassword.setText("Password not valid for this user");
+				loginView.lblPassword.setForeground(Color.RED);
+				return;
 			}
 			
 		}
@@ -94,13 +112,18 @@ public class LogonController
 	public class ForgotListener implements ActionListener 
 	{
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Inside ForgotListener");
 		}
 	}
 	
 	public class NewUserListener implements ActionListener 
 	{
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("Inside ForgotListener");
+			NewUserFrame newUserView = new NewUserFrame();
+			DbAccess DbHandle = DbAccess.getInstance();
+			NewUserController newUser = new NewUserController( newUserView,  DbHandle, lController);
+			newUser.startNewUser();
+			newUserView.setVisible(true);
 			System.out.println("Inside NewUserListener");
 		}
 	}

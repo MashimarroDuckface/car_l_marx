@@ -24,14 +24,10 @@ import java.awt.Color;
 
 import javax.swing.border.BevelBorder;
 
-import java.awt.event.MouseAdapter;
-
 import javax.swing.JSeparator;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class LoginFrame extends JFrame
 {
@@ -46,11 +42,13 @@ public class LoginFrame extends JFrame
 	private JButton btnSignUp;
 	private JTextField txtUserName;
 	private JPasswordField txtUserPassword;
+	public JLabel lblPassword;
 	
 	public LoginPanel loginImage;
 	private JLabel lblSignIn;
 	private JSeparator separator_1;
 	private JLabel lblNewUser;
+	public JLabel lblUsrId;
 	
 	/**
 	 * Create the frame.
@@ -66,18 +64,18 @@ public class LoginFrame extends JFrame
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblPleaseEnterYour = new JLabel("User id");
-		lblPleaseEnterYour.setBounds(43, 45, 57, 16);
-		contentPane.add(lblPleaseEnterYour);
+		lblUsrId = new JLabel("User id");
+		lblUsrId.setBounds(43, 45, 199, 16);
+		contentPane.add(lblUsrId);
 		
 		txtUserName = new JTextField();
 		txtUserName.setBounds(43, 65, 199, 28);
 		contentPane.add(txtUserName);
 		txtUserName.setColumns(10);
 		
-		JLabel lblNewLabel = new JLabel("Password");
-		lblNewLabel.setBounds(43, 95, 61, 16);
-		contentPane.add(lblNewLabel);
+		lblPassword = new JLabel("Password");
+		lblPassword.setBounds(43, 95, 233, 16);
+		contentPane.add(lblPassword);
 		
 		txtUserPassword = new JPasswordField();
 		txtUserPassword.setBounds(43, 115, 195, 28);
@@ -112,12 +110,12 @@ public class LoginFrame extends JFrame
 		lblNewUser.setBounds(43, 298, 61, 16);
 		contentPane.add(lblNewUser);
 		
-//		lblNewLabel_1 = new JLabel("User Name and Passord are Invalid");
-//		lblNewLabel_1.setEnabled(false);
-//		lblNewLabel_1.setBounds(119, 45, 228, 16);
-//		contentPane.add(lblNewLabel_1);
-
 		paintLoginPanel();
+	}
+	
+	public void paint()
+	{
+		
 	}
 	
 	private void paintLoginPanel()

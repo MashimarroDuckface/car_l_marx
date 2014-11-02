@@ -13,17 +13,10 @@
 */
 package views;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTable;
 
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Color;
 
 public class VehicleFrame extends JFrame

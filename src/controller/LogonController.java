@@ -112,6 +112,14 @@ public class LogonController
 	public class ForgotListener implements ActionListener 
 	{
 		public void actionPerformed(ActionEvent e) {
+			
+				System.out.println("Inside ForgotListener");
+				ForgotFrame forgotView = new ForgotFrame();
+				DbAccess DbHandle = DbAccess.getInstance();
+				ForgotController Forgot = new ForgotController( forgotView,  DbHandle, lController);
+				Forgot.startForgot();
+				forgotView.setVisible(true);
+				System.out.println("Inside NewUserListener");
 		}
 	}
 	

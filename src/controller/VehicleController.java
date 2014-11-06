@@ -41,8 +41,14 @@ public class VehicleController
 		}
 	}
 	
-	private void getVehicleData()
+	private ArrayList getVehicleData()
 	{
-		
+		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle(userName);
+		//  This is how you can read the data back from the array list
+		for (VehiclesObject v:vehicleList)
+		{
+			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
+		}
+		return vehicleList;
 	}
 }

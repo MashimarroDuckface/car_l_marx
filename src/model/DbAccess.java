@@ -209,38 +209,6 @@ public class DbAccess
 		}
 		return false; // did not get the user
 	}
-
-	public void test(String userName)
-	{
-		
-		System.out.println("**************************************************DbAccess - getUserVehicle");
-		String cleanUserName = sanitizeUserName(userName);
-		try
-		{
-			this.getUserVehicles.setString(1, cleanUserName);
-			ResultSet resultSet = this.getUserVehicles.executeQuery();
-			
-			while (resultSet.next())
-			{
-				// TODO loop through result set getting all vehicles. Set them
-				// into an array
-				System.out.println(resultSet.getInt("idvehicle") + " "
-						+ resultSet.getString("makeTable.make") + " "
-						+ resultSet.getString("modelTable.model") + " "
-						+ resultSet.getString("colorTable.color") + " "
-						+ resultSet.getString("licensePlate") + " "
-						+ resultSet.getInt("mileage") );
-				
-			}
-		} catch (SQLException e)
-		{
-			System.out.println("error on fetch of getUserVehicles " + e);
-			System.out.println("SQLException: " + e.getMessage());
-			System.out.println("SQLState: " + e.getSQLState());
-			System.out.println("Vehicles Table: " + e.getErrorCode());
-			e.printStackTrace();
-		}
-	}
 	
 	public ArrayList<VehiclesObject> getUserVehicle(String userName)
 	{
@@ -264,7 +232,7 @@ public class DbAccess
 						+ resultSet.getString("modelTable.model") + " "
 						+ resultSet.getString("colorTable.color") + " "
 						+ resultSet.getString("licensePlate") + " "
-						+ resultSet.getInt("mileage") + " number of rows returned  " );
+						+ resultSet.getInt("mileage") );
 				
 				VehiclesObject vehicle = new VehiclesObject(resultSet.getInt("idvehicle") , resultSet.getString("makeTable.make"), resultSet.getString("modelTable.model"), resultSet.getString("colorTable.color"), resultSet.getString("licensePlate"), resultSet.getInt("mileage"));
 				vehicleList.add(vehicle);

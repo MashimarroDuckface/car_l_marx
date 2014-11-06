@@ -19,17 +19,21 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.Color;
 
+import controller.*;
+
 public class VehicleFrame extends JFrame
 {
 
 	private JPanel contentPane;
 	private VehicleTablePanel vTable;
+	private VehicleStart vController;
 
 	/**
 	 * Create the frame.
 	 */
-	public VehicleFrame()
+	public VehicleFrame(VehicleStart vController)
 	{
+		this.vController = vController;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 450);
 		contentPane = new JPanel();

@@ -118,13 +118,13 @@ public class LogonController
 	public class NewUserListener implements ActionListener 
 	{
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Inside ForgotListener");
+	//		System.out.println("Inside ForgotListener");
 			NewUserFrame newUserView = new NewUserFrame();
 			DbAccess DbHandle = DbAccess.getInstance();
 			NewUserController newUser = new NewUserController( newUserView,  DbHandle, lController);
 			newUser.startNewUser();
 			newUserView.setVisible(true);
-			System.out.println("Inside NewUserListener");
+	//		System.out.println("Inside NewUserListener");
 		}
 	}
 }

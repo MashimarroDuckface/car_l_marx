@@ -27,7 +27,7 @@ public class VehicleStart
 	{
 		this.user = user;
 		
-		vehicleView = new VehicleFrame();
+		vehicleView = new VehicleFrame(this);
 		DbHandle = DbAccess.getInstance();
 //		DbHandle.getUserVehicle("Lacemaker");
 		vehicleController = new VehicleController(vehicleView, DbHandle, user);

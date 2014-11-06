@@ -82,15 +82,15 @@ public class LoginFrame extends JFrame
 		contentPane.add(txtUserPassword);
 		
 		btnLoginSubmit = new JButton("SIGN IN");
-		btnLoginSubmit.setBounds(43, 155, 137, 29);
+		btnLoginSubmit.setBounds(43, 155, 175, 29);
 		contentPane.add(btnLoginSubmit);
 		
 		btnForgotPassword = new JButton("Forgot Password ?");
-		btnForgotPassword.setBounds(43, 232, 137, 29);
+		btnForgotPassword.setBounds(43, 232, 177, 29);
 		contentPane.add(btnForgotPassword);
 		
 		btnSignUp = new JButton("Sign Up");
-		btnSignUp.setBounds(43, 326, 117, 29);
+		btnSignUp.setBounds(43, 326, 175, 29);
 		contentPane.add(btnSignUp);
 		
 		lblSignIn = new JLabel("Sign In");
@@ -107,7 +107,7 @@ public class LoginFrame extends JFrame
 		contentPane.add(separator_1);
 		
 		lblNewUser = new JLabel("New User");
-		lblNewUser.setBounds(43, 298, 61, 16);
+		lblNewUser.setBounds(43, 298, 100, 16);
 		contentPane.add(lblNewUser);
 		
 		paintLoginPanel();

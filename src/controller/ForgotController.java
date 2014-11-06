@@ -46,6 +46,13 @@ public class ForgotController
 			//  Reset all labels
 			userView.lblUserName.setText("* User Name");
 			userView.lblUserName.setForeground(Color.BLACK);
+			
+			userView.lblEmail.setText("* Email");
+			userView.lblEmail.setForeground(Color.BLACK);
+			
+			userView.lblReenterEmail.setText("* Email");
+			userView.lblReenterEmail.setForeground(Color.BLACK);
+			/*
 			userView.lblPassword.setText("* Password");
 			userView.lblPassword.setForeground(Color.BLACK);
 			userView.lblFirstName.setText("* First Name");
@@ -54,7 +61,7 @@ public class ForgotController
 			userView.lblLastName.setForeground(Color.BLACK);
 			userView.lblEmailAddress.setText("* Email");
 			userView.lblEmailAddress.setForeground(Color.BLACK);
-			
+			*/
 			//  TODO  sanitize all input
 			String userName = userView.txtUserName.getText();
 			
@@ -70,7 +77,9 @@ public class ForgotController
 				userView.lblUserName.setForeground(Color.RED);
 				return;
 			}
-			
+			//TODO Check if email adresses match
+			//TODO SQL side stuff: temp PW, email user
+			/*
 			char[] password = userView.txtPass.getPassword();
 			char[] rePass = userView.txtRePass.getPassword();
 			
@@ -126,7 +135,7 @@ public class ForgotController
 			String encPassword = pass.getSecurePassword(new String(password), salt);
 
 	//		dbHandle.insertForgot(userName, encPassword, salt, firstName, lastName, emailAdd);
-			
+			*/
 			userView.setVisible(false); //you can't see me!
 			userView.dispose(); //Destroy the JFrame object
 	//		mController.goodUser(userName);

@@ -31,17 +31,22 @@ public class ForgotFrame extends JFrame
 	private JPanel contentPane;
 	
 	public JLabel lblUserName;
-	public JLabel lblPassword;
-	public JLabel lblReenterPassword;
-	public JLabel lblFirstName;
-	public JLabel lblLastName;
-	public JLabel lblEmailAddress;
+	public JLabel lblEmail;
+	public JLabel lblReenterEmail;
+	public JLabel lblHeader;
+	
+	//public JLabel lblPassword;
+	//public JLabel lblReenterPassword;
+	//public JLabel lblFirstName;
+	//public JLabel lblLastName;
+	//public JLabel lblEmailAddress;
 	public JTextField txtUserName;
-	public JPasswordField txtPass;
-	public JPasswordField txtRePass;
-	public JTextField txtFirstName;
-	public JTextField txtLastName;
+	//public JPasswordField txtPass;
+	//public JPasswordField txtRePass;
 	public JTextField txtEmail;
+	public JTextField txtReenterEmail;
+	
+	//public JTextField txtEmail;
 	
 	private JButton btnSubmit;
 
@@ -52,40 +57,45 @@ public class ForgotFrame extends JFrame
 	{
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 500);
+		setBounds(100, 100, 210, 300);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 240));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		lblUserName = new JLabel("Forgot Password");
+		lblUserName.setBounds(10, 20, 190, 16);
+		contentPane.add(lblUserName);
+		
 		lblUserName = new JLabel("* User Name");
-		lblUserName.setBounds(34, 30, 185, 16);
+		lblUserName.setBounds(34, 40, 185, 16);
 		contentPane.add(lblUserName);
 		
 		txtUserName = new JTextField();
-		txtUserName.setBounds(27, 50, 206, 28);
+		txtUserName.setBounds(10, 60, 190, 28);
 		contentPane.add(txtUserName);
 		txtUserName.setColumns(10);
 		
-		lblPassword = new JLabel("* Password");
-		lblPassword.setBounds(34, 90, 199, 16);
-		contentPane.add(lblPassword);
+		lblEmail = new JLabel("* Email Address");
+		lblEmail.setBounds(34, 100, 199, 16);
+		contentPane.add(lblEmail);
 		
-		txtPass = new JPasswordField();
-		txtPass.setBounds(27, 110, 206, 28);
-		contentPane.add(txtPass);
-		txtPass.setColumns(10);
+		txtEmail = new JTextField();
+		txtEmail.setBounds(10, 120, 190, 28);
+		contentPane.add(txtEmail);
+		txtEmail.setColumns(10);
 		
-		lblReenterPassword = new JLabel("* Reenter Password");
-		lblReenterPassword.setBounds(34, 150, 199, 16);
-		contentPane.add(lblReenterPassword);
+		lblReenterEmail= new JLabel("* Reenter Email");
+		lblReenterEmail.setBounds(34, 160, 199, 16);
+		contentPane.add(lblReenterEmail);
 		
-		txtRePass = new JPasswordField();
-		txtRePass.setBounds(27, 170, 206, 28);
-		contentPane.add(txtRePass);
-		txtRePass.setColumns(10);
+		txtReenterEmail = new JTextField();
+		txtReenterEmail.setBounds(10, 180, 190, 28);
+		contentPane.add(txtReenterEmail);
+		txtReenterEmail.setColumns(10);
 		
+		/*
 		lblFirstName = new JLabel("* First Name");
 		lblFirstName.setBounds(34, 210, 199, 16);
 		contentPane.add(lblFirstName);
@@ -112,9 +122,10 @@ public class ForgotFrame extends JFrame
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(27, 350, 206, 28);
 		contentPane.add(txtEmail);
+		*/
 		
 		btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(147, 414, 117, 29);
+		btnSubmit.setBounds(55, 220, 105, 29);
 		contentPane.add(btnSubmit);
 	}
 	

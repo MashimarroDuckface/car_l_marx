@@ -36,5 +36,11 @@ public class MainController
 	{
 		// TODO  wait for the above threads to complete before doing this
 		VehicleStart cars = new VehicleStart(userName);
+//		vehicleTabbedFrame(userName);
+	}
+	
+	public void vehicleTabbedFrame(String userName)
+	{
+		VehicleTabbedStart vController = new VehicleTabbedStart(this, userName);
 	}
 }

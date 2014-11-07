@@ -26,7 +26,7 @@ public class VehicleFrame extends JFrame
 
 	private JPanel contentPane;
 	private VehicleTablePanel vTable;
-	private VehicleStart vController;
+	public VehicleStart vController;
 
 	/**
 	 * Create the frame.
@@ -48,6 +48,7 @@ public class VehicleFrame extends JFrame
 	
 	private void paintVehicleTablePanel()
 	{
+		
 		vTable = new VehicleTablePanel();
 		vTable.setBackground(new Color(255, 255, 240));
 		vTable.setBounds(0, 0, 450, 425);

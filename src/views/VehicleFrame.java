@@ -44,14 +44,14 @@ public class VehicleFrame extends JFrame
 		
 	}
 
-	public void paintVehicleTablePanel(VehicleController vController)
+	public void paintVehicleTablePanel()
 	{
-		vTable = new VehicleTablePanel(vController);
+		//vTable = new VehicleTablePanel(vController);
 		/*vTable.setBackground(new Color(255, 255, 240));
 		vTable.setBounds(0, 0, 450, 425);
 		contentPane.add(vTable);
 		vTable.setLayout(null);*/
-		vTable.createAndShowGUI(vController);
+		//vTable.createAndShowGUI(vController);
 		
 	}
 	

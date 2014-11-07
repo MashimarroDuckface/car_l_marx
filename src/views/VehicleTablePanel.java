@@ -18,10 +18,10 @@ public class VehicleTablePanel extends JPanel {
     private boolean DEBUG = false;
     ArrayList<VehiclesObject> vehiclelist;
     VehicleController vController;
+    Object[][] data;
 
-    public VehicleTablePanel(VehicleController vController) {
+    public VehicleTablePanel(ArrayList <VehiclesObject> vlist) {
         super(new GridLayout(1,0));
-        this.vController=vController;
 
         String[] columnNames = {"Color",
                                 "License Plate",
@@ -30,9 +30,8 @@ public class VehicleTablePanel extends JPanel {
                                 "Model",
                                 "Mileage"};
 
-        vehiclelist = this.vController.getVehicleData();
+        vehiclelist = vlist;
         System.out.println(vehiclelist);
-		Object[][] data=null;
 		int i=0;
 		for (VehiclesObject v:vehiclelist)
 		{
@@ -86,20 +85,20 @@ public class VehicleTablePanel extends JPanel {
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    void createAndShowGUI(VehicleController vController) {
+   /*void createAndShowGUI(VehicleController vController) {
         //Create and set up the window.
         JFrame frame = new JFrame("SimpleTableDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
-        VehicleTablePanel newContentPane = new VehicleTablePanel(vController);
+        VehicleTablePanel newContentPane = new VehicleTablePanel(vList);
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
 
         //Display the window.
         frame.pack();
         frame.setVisible(true);
-    }
+    }*/
 
 
 }

@@ -33,7 +33,7 @@ public class VehicleSummary extends JFrame
 	/**
 	 * Create the frame.
 	 */
-	public VehicleSummary()
+	/*public VehicleSummary()
 	{
 		this.vController = vController;
 		setTitle("Car-L-Marx");
@@ -59,5 +59,5 @@ public class VehicleSummary extends JFrame
 		
 		pack();
 		setVisible(true);
-	}
+	}*/
 }

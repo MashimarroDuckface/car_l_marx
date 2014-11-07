@@ -31,7 +31,7 @@ public class VehicleController
 		this.userName = userName;
 	}
 	
-	public void startVehicle()
+	public ArrayList<VehiclesObject> startVehicle()
 	{
 		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle("Lacemaker");
 		//  This is how you can read the data back from the array list
@@ -39,6 +39,7 @@ public class VehicleController
 		{
 			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
 		}
+		return vehicleList;
 	}
 	
 	public ArrayList getVehicleData()

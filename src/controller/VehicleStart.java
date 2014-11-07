@@ -13,6 +13,10 @@
 */
 package controller;
 
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+
 import model.*;
 import views.*;
 
@@ -22,16 +26,35 @@ public class VehicleStart
 	private VehicleFrame vehicleView;
 	private DbAccess DbHandle;
 	private VehicleController vehicleController;
+	ArrayList <VehiclesObject> vlist;
+	
 	
 	public VehicleStart(String user)
 	{
 		this.user = user;
 		
-		vehicleView = new VehicleFrame(this);
+		vehicleView = new VehicleFrame();
 		DbHandle = DbAccess.getInstance();
 		vehicleController = new VehicleController(vehicleView, DbHandle, user);
-		vehicleController.startVehicle();
-		vehicleView.setVisible(true);
+		vlist=vehicleController.startVehicle();
+		createAndShowGUI(vlist);
+		//vehicleView.paintVehicleTablePanel(vehicleController);
+		//vehicleView.setVisible(true);
 		
 	}
+
+void createAndShowGUI(ArrayList <VehiclesObject> vlist) {
+    //Create and set up the window.
+    JFrame frame = new JFrame("SimpleTableDemo");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    //Create and set up the content pane.
+    VehicleTablePanel newContentPane = new VehicleTablePanel(vlist);
+    newContentPane.setOpaque(true); //content panes must be opaque
+    frame.setContentPane(newContentPane);
+
+    //Display the window.
+    frame.pack();
+    frame.setVisible(true);
+}
 }

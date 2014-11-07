@@ -44,6 +44,7 @@ public class TabbedVehicleFrame extends JPanel
 	public JComboBox cbxMake;
 	public MutableComboBoxModel cbxModel;
 
+	//  TODO  test only
 	/**
 	 * Create the panel.
 	 */

@@ -43,7 +43,7 @@ public class LogonController
 		this.loginView.addSubmitButtonListener(new SubmitListener());
 		this.loginView.addbtnForgotButtonListener(new ForgotListener());	
 		this.loginView.addbtnNewUserButtonListener(new NewUserListener());		
-		
+		this.loginView.addbtnResetButtonListener(new ResetListener());	
 		//  TODO  need to find out when the goodLogin field changes
 		return false;
 	//	return this.goodLogin;
@@ -120,6 +120,19 @@ public class LogonController
 				Forgot.startForgot();
 				forgotView.setVisible(true);
 				System.out.println("Inside NewUserListener");
+		}
+	}
+	
+	public class ResetListener implements ActionListener 
+	{
+		public void actionPerformed(ActionEvent e) {
+			
+				System.out.println("Inside resetListener");
+				ResetFrame resetView = new ResetFrame();
+				DbAccess DbHandle = DbAccess.getInstance();
+				ResetController reset = new ResetController( resetView,  DbHandle, lController);
+				reset.startReset();
+				resetView.setVisible(true);
 		}
 	}
 	

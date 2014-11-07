@@ -40,6 +40,7 @@ public class LoginFrame extends JFrame
 	private JButton btnLoginSubmit;
 	private JButton btnForgotPassword;
 	private JButton btnSignUp;
+	private JButton btnResetPassword;
 	private JTextField txtUserName;
 	private JPasswordField txtUserPassword;
 	public JLabel lblPassword;
@@ -88,6 +89,10 @@ public class LoginFrame extends JFrame
 		btnForgotPassword = new JButton("Forgot Password ?");
 		btnForgotPassword.setBounds(43, 232, 177, 29);
 		contentPane.add(btnForgotPassword);
+		
+		btnResetPassword = new JButton("Reset Password");
+		btnResetPassword.setBounds(300, 232, 177, 29);
+		contentPane.add(btnResetPassword);
 		
 		btnSignUp = new JButton("Sign Up");
 		btnSignUp.setBounds(43, 326, 175, 29);
@@ -148,6 +153,10 @@ public class LoginFrame extends JFrame
 	public void addbtnNewUserButtonListener(ActionListener listenerForNewUserButton) 
 	{
 		btnSignUp.addActionListener(listenerForNewUserButton);
+	}
+	public void addbtnResetButtonListener(ActionListener listenerForResetButton) 
+	{
+		btnResetPassword.addActionListener(listenerForResetButton);
 	}
 
 }

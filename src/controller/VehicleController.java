@@ -41,7 +41,7 @@ public class VehicleController
 		}
 	}
 	
-	private ArrayList getVehicleData()
+	public ArrayList getVehicleData()
 	{
 		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle(userName);
 		//  This is how you can read the data back from the array list

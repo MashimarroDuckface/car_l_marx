@@ -26,14 +26,13 @@ public class VehicleFrame extends JFrame
 
 	private JPanel contentPane;
 	private VehicleTablePanel vTable;
-	private VehicleStart vController;
+	private VehicleController vController;
 
 	/**
 	 * Create the frame.
 	 */
-	public VehicleFrame(VehicleStart vController)
+	public VehicleFrame()
 	{
-		this.vController = vController;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 450);
 		contentPane = new JPanel();
@@ -42,17 +41,17 @@ public class VehicleFrame extends JFrame
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		paintVehicleTablePanel();
 		
 	}
-	
-	private void paintVehicleTablePanel()
+
+	public void paintVehicleTablePanel(VehicleController vController)
 	{
-		vTable = new VehicleTablePanel();
-		vTable.setBackground(new Color(255, 255, 240));
+		vTable = new VehicleTablePanel(vController);
+		/*vTable.setBackground(new Color(255, 255, 240));
 		vTable.setBounds(0, 0, 450, 425);
 		contentPane.add(vTable);
-		vTable.setLayout(null);
+		vTable.setLayout(null);*/
+		vTable.createAndShowGUI(vController);
 		
 	}
 	

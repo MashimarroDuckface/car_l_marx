@@ -27,11 +27,12 @@ public class VehicleStart
 	{
 		this.user = user;
 		
-		vehicleView = new VehicleFrame(this);
+		vehicleView = new VehicleFrame();
 		DbHandle = DbAccess.getInstance();
 //		DbHandle.getUserVehicle("Lacemaker");
 		vehicleController = new VehicleController(vehicleView, DbHandle, user);
 		vehicleController.startVehicle();
+		vehicleView.paintVehicleTablePanel(vehicleController);
 		vehicleView.setVisible(true);
 		
 	}

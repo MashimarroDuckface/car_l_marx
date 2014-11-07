@@ -58,7 +58,7 @@ public class LoginFrame extends JFrame
 	{
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 500);
+		setBounds(100, 100, 250, 350);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 240));
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(250, 250, 210), new Color(248, 248, 255), new Color(211, 211, 211), new Color(128, 128, 128)));
@@ -66,53 +66,53 @@ public class LoginFrame extends JFrame
 		contentPane.setLayout(null);
 		
 		lblUsrId = new JLabel("User id");
-		lblUsrId.setBounds(43, 45, 199, 16);
+		lblUsrId.setBounds(25, 30, 200, 16);
 		contentPane.add(lblUsrId);
 		
 		txtUserName = new JTextField();
-		txtUserName.setBounds(43, 65, 199, 28);
+		txtUserName.setBounds(25, 50, 200, 28);
 		contentPane.add(txtUserName);
 		txtUserName.setColumns(10);
 		
 		lblPassword = new JLabel("Password");
-		lblPassword.setBounds(43, 95, 233, 16);
+		lblPassword.setBounds(25, 80, 200, 16);
 		contentPane.add(lblPassword);
 		
 		txtUserPassword = new JPasswordField();
-		txtUserPassword.setBounds(43, 115, 195, 28);
+		txtUserPassword.setBounds(25, 100, 200, 28);
 		contentPane.add(txtUserPassword);
 		
 		btnLoginSubmit = new JButton("SIGN IN");
-		btnLoginSubmit.setBounds(43, 155, 175, 29);
+		btnLoginSubmit.setBounds(25, 140, 200, 28);
 		contentPane.add(btnLoginSubmit);
 		
 		btnForgotPassword = new JButton("Forgot Password ?");
-		btnForgotPassword.setBounds(43, 232, 177, 29);
+		btnForgotPassword.setBounds(25, 180, 200, 28);
 		contentPane.add(btnForgotPassword);
 		
 		btnResetPassword = new JButton("Reset Password");
-		btnResetPassword.setBounds(300, 232, 177, 29);
+		btnResetPassword.setBounds(25, 220, 200, 28);
 		contentPane.add(btnResetPassword);
 		
 		btnSignUp = new JButton("Sign Up");
-		btnSignUp.setBounds(43, 326, 175, 29);
+		btnSignUp.setBounds(25, 285, 200, 29);
 		contentPane.add(btnSignUp);
 		
 		lblSignIn = new JLabel("Sign In");
 		lblSignIn.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblSignIn.setBounds(43, 6, 61, 16);
+		lblSignIn.setBounds(25, 5, 200, 16);
 		contentPane.add(lblSignIn);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(43, 23, 304, 12);
+		separator.setBounds(25, 23, 350, 12);
 		contentPane.add(separator);
 		
 		separator_1 = new JSeparator();
-		separator_1.setBounds(43, 273, 309, 12);
+		separator_1.setBounds(25, 273, 350, 12);
 		contentPane.add(separator_1);
 		
 		lblNewUser = new JLabel("New User");
-		lblNewUser.setBounds(43, 298, 100, 16);
+		lblNewUser.setBounds(25, 255, 100, 16);
 		contentPane.add(lblNewUser);
 		
 		paintLoginPanel();

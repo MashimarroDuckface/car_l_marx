@@ -49,7 +49,8 @@ public class ForgotFrame extends JFrame
 	//public JTextField txtEmail;
 	
 	private JButton btnSubmit;
-
+	private JButton btnCancel;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -125,12 +126,20 @@ public class ForgotFrame extends JFrame
 		*/
 		
 		btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(55, 220, 105, 29);
+		btnSubmit.setBounds(10, 220, 95, 29);
 		contentPane.add(btnSubmit);
+		
+		btnCancel = new JButton("Cancel");
+		btnCancel.setBounds(100, 220, 95, 29);
+		contentPane.add(btnCancel);
 	}
 	
 	public void addSubmitButtonListener(ActionListener listenerForSubmitButton) 
 	{
 		this.btnSubmit.addActionListener(listenerForSubmitButton);
+	}
+	public void addCancelButtonListener(ActionListener listenerForCancelButton) 
+	{
+		this.btnCancel.addActionListener(listenerForCancelButton);
 	}
 }

@@ -38,6 +38,7 @@ public class ForgotController
 	public void startForgot()
 	{
 		this.userView.addSubmitButtonListener(new SubmitListener());
+		this.userView.addCancelButtonListener(new CancelListener());
 	}
 	
 	public class SubmitListener implements ActionListener 
@@ -75,4 +76,12 @@ public class ForgotController
 	//		mController.goodUser(userName);
 		}
 	}
+	
+	public class CancelListener implements ActionListener 
+	{
+		public void actionPerformed(ActionEvent e) {
+			userView.setVisible(false); //you can't see me!
+			userView.dispose();
+	}
+		}
 }

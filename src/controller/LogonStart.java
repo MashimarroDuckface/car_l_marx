@@ -30,8 +30,6 @@ public class LogonStart
 		DbHandle = DbAccess.getInstance();
 		this.mController  = mController;
 		logonController  = new LogonController( loginView,  DbHandle,  mController);
-		
-	//	boolean good = logonGetGoing();
 	}
 	
 	public void logonGetGoing()

@@ -35,6 +35,9 @@ public class DbAccess
 	private PreparedStatement getUserSalt;
 	private PreparedStatement getUserPass;
 	private PreparedStatement getUserVehicles;
+	private PreparedStatement getMake;
+	private PreparedStatement getMakeId;
+	private PreparedStatement getModel;
 
 	/**
 	 * Note that the constructor is listed as private. That will disallow the
@@ -85,13 +88,6 @@ public class DbAccess
 	{
 		try
 		{
-			// String insertVehicleString =
-			// "INSERT INTO `car_l_marx`.`vehicle` (`vehicleId`, `make`, `model`, `year`, `color`) VALUES (null, ?, ?, ?, ?);";
-			// insertVehicle = conn.prepareStatement(insertVehicleString);
-			// String deleteVehicleString =
-			// "DELETE FROM `car_l_marx`.`vehicle` WHERE `vehicleID` = ?";
-			// deleteVehicle = conn.prepareStatement(deleteVehicleString);
-
 			// User statements
 			String insertUserString = "INSERT INTO `car_l_marx`.`userTable` (`userName`, `userPassword`, `passSalt`, `fName`, `lname`, `userEmail`) VALUES (?, ?, ?, ?, ?, ?)";
 			insertUser = conn.prepareStatement(insertUserString);
@@ -105,8 +101,12 @@ public class DbAccess
 			getUserPass = conn.prepareStatement(getUserPassString);
 			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
-//			String getUserVehiclesString = "SELECT count(*) as rowCount, idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
-//			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
+			String getMakeString = "SELECT * FROM `makeTable` ORDER BY `make`";
+			getMake = conn.prepareStatement(getMakeString);
+			String getMakeIdString = "SELECT `idMake` FROM  `makeTable` WHERE  `make` =  ?";
+			getMakeId = conn.prepareStatement(getMakeIdString);
+			String getModelString = "SELECT * FROM `modelTable` WHERE `idMake` = ?";
+			getModel = conn.prepareStatement(getModelString);
 
 		} catch (SQLException e)
 		{
@@ -136,6 +136,80 @@ public class DbAccess
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public ArrayList<MakeObject> getMake()
+	{
+		ArrayList<MakeObject> makeList = new ArrayList<MakeObject>();
+		try
+		{
+			ResultSet resultSet = this.getMake.executeQuery();
+			while (resultSet.next())
+			{
+//				System.out.println ("inside DbAccess - getMake " +
+//						resultSet.getInt("idMake") + "  "  +  resultSet.getString("make"));
+				MakeObject makeItem = new MakeObject(resultSet.getString("make"));
+				makeList.add(makeItem);
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get make " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return makeList;
+	}
+	
+	public int getMakeId(String make)
+	{
+		try
+		{
+			ResultSet resultSet = this.getMakeId.executeQuery();
+			while (resultSet.next())
+			{
+				System.out.println ("inside DbAccess - getMake " +
+						resultSet.getInt("idMake"));
+				return resultSet.getInt("idMake");
+				
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get make " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return -999;			//  no make found - problem - should not happen
+	}
+	
+	public String[] getModel(String make)
+	{
+		int idMake = this.getMakeId(make);
+		String[] model = null;
+		int i = 0;
+		try
+		{
+			this.getModel.setInt(1, idMake);
+			ResultSet resultSet = this.getModel.executeQuery();
+			while (resultSet.next())
+			{
+				System.out.println ("inside DbAccess - getModel " +
+						resultSet.getInt("idModel") + "  "  +  resultSet.getString("Model"));
+				model[i++] = resultSet.getString("model");
+				
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get model " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Model Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return model;
 	}
 
 	public String getPass(String userName)

@@ -22,7 +22,9 @@ public class VehicleTablePanel extends JPanel {
 
     public VehicleTablePanel(ArrayList <VehiclesObject> vlist) {
         super(new GridLayout(1,0));
-
+        
+        Object[][] data = null;
+     
         String[] columnNames = {"Color",
                                 "License Plate",
                                 "Vehicle ID",

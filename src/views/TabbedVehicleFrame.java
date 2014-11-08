@@ -42,7 +42,8 @@ public class TabbedVehicleFrame extends JPanel
 	private JPanel panelTires;
 	private VehicleTabbedController vTController;
 	public JComboBox cbxMake;
-	public MutableComboBoxModel cbxModel;
+//	public MutableComboBoxModel cbxModel;
+	public JComboBox cbxModel;
 
 	//  TODO  test only
 	/**
@@ -121,8 +122,9 @@ public class TabbedVehicleFrame extends JPanel
     		lblMake.setBounds(36, 30, 61, 16);
     		panelEdit.add(lblMake);
     	}
-    	ArrayList<MakeObject> makes = vTController.getMake();
-    	Object[] makeArray = makes.toArray();
+//    	ArrayList<MakeObject> makes = vTController.getMake();
+//    	Object[] makeArray = makes.toArray();
+    	String[] makeArray = {"Audi", "Ford", "GM", "KIA", "BMW", "Tesla", "Toyota", "Honda"};
     	{
             cbxMake = new JComboBox(makeArray);
             cbxMake.setBounds(36, 50, 178, 27);
@@ -133,7 +135,12 @@ public class TabbedVehicleFrame extends JPanel
     		lblModel.setBounds(36, 80, 61, 16);
     		panelEdit.add(lblModel);
     	}
-    	String[] modelStrings = { "select model" };
+    	String[] modelStrings = { "select model", "Camry", "Corolla", "CRV", "Odessy", "Bronco" };
+    	{
+            cbxModel = new JComboBox(modelStrings);
+            cbxModel.setBounds(36, 100, 178, 27);
+            panelEdit.add(cbxModel);
+    	}
 //    	{
 //    		cbxModel =  (MutableComboBoxModel) cbxModel;  
 //  //  		((Component) cbxModel).setBounds(36, 100, 178, 27);

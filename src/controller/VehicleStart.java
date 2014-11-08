@@ -45,7 +45,7 @@ public class VehicleStart
 
 void createAndShowGUI(ArrayList <VehiclesObject> vlist) {
     //Create and set up the window.
-    JFrame frame = new JFrame("SimpleTableDemo");
+    JFrame frame = new JFrame("Car-L-Marx");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.

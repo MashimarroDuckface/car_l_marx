@@ -35,7 +35,7 @@ public class MainController
 	public void goodUser(String userName)
 	{
 		// TODO  wait for the above threads to complete before doing this
-		VehicleStart cars = new VehicleStart(userName);
+		VehicleStart cars = new VehicleStart(this, userName);
 //		vehicleTabbedFrame(userName);
 	}
 	

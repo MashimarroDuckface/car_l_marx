@@ -13,8 +13,11 @@
 */
 package controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import controller.VehicleTabbedController.SubmitListener;
 import views.*;
 import model.*;
 
@@ -33,6 +36,7 @@ public class VehicleController
 	
 	public ArrayList<VehiclesObject> startVehicle()
 	{
+//		this.vehicleView.addSubmitButtonListener(new SubmitListener());
 		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle("Lacemaker");
 		//  This is how you can read the data back from the array list
 		for (VehiclesObject v:vehicleList)
@@ -51,5 +55,12 @@ public class VehicleController
 			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
 		}
 		return vehicleList;
+	}
+	
+	public class SubmitListener implements ActionListener 
+	{
+		public void actionPerformed(ActionEvent e) {
+
+		}
 	}
 }

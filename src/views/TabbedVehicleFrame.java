@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -28,10 +29,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.MutableComboBoxModel;
 
 import controller.VehicleTabbedController;
 import model.*;
+
+import java.awt.event.ActionEvent;
 
 public class TabbedVehicleFrame extends JPanel
 {
@@ -44,14 +46,16 @@ public class TabbedVehicleFrame extends JPanel
 	public JComboBox cbxMake;
 //	public MutableComboBoxModel cbxModel;
 	public JComboBox cbxModel;
+	private ArrayList<ModelObject> modelList;
 
-	//  TODO  test only
 	/**
 	 * Create the panel.
 	 */
 	public TabbedVehicleFrame(VehicleTabbedController vTController)
+//	public TabbedVehicleFrame()
 	{
 		this.vTController = vTController;
+		this.vTController.getTabViewObject(this);
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		JComponent panel1 = makeTextPanelSummary("");
@@ -78,7 +82,10 @@ public class TabbedVehicleFrame extends JPanel
 		// The following line enables to use scrolling tabs.
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
-
+	public void setController(VehicleTabbedController vTController)
+	{
+		this.vTController = vTController;
+	}
 	protected JComponent makeTextPanelSummary(String text)
 	{
 		panelSummary = new JPanel(false);
@@ -122,11 +129,32 @@ public class TabbedVehicleFrame extends JPanel
     		lblMake.setBounds(36, 30, 61, 16);
     		panelEdit.add(lblMake);
     	}
-//    	ArrayList<MakeObject> makes = vTController.getMake();
-//    	Object[] makeArray = makes.toArray();
-    	String[] makeArray = {"Audi", "Ford", "GM", "KIA", "BMW", "Tesla", "Toyota", "Honda"};
+    	/*  Get the values for the make combo box from the db  */
+    	ArrayList<MakeObject> makes = vTController.getMake();
+    	String makeArray [] = new String[makes.size()];
+    	int i = 0;
+    	for (MakeObject m:makes )
+    	{
+    		makeArray[i++] = m.make;
+    	}
     	{
             cbxMake = new JComboBox(makeArray);
+            cbxMake.addActionListener(new ActionListener() {
+            	public void actionPerformed(ActionEvent e) {
+            		System.out.println("Combobox action performed");
+            		JComboBox cb = (JComboBox)e.getSource();
+        	        String selectedMake = (String)cb.getSelectedItem();
+        	        System.out.println("make selected " + selectedMake);
+        	        modelList = vTController.getModel(selectedMake);     //  model list for model combobox
+                    DefaultComboBoxModel model = (DefaultComboBoxModel) cbxModel.getModel();
+                    model.removeAllElements();
+                    for (ModelObject m:modelList)
+                    {
+                    	model.addElement(m.model);
+                    }
+                    cbxModel.setModel(model);
+            	}
+            });
             cbxMake.setBounds(36, 50, 178, 27);
             panelEdit.add(cbxMake);
     	}
@@ -135,17 +163,14 @@ public class TabbedVehicleFrame extends JPanel
     		lblModel.setBounds(36, 80, 61, 16);
     		panelEdit.add(lblModel);
     	}
-    	String[] modelStrings = { "select model", "Camry", "Corolla", "CRV", "Odessy", "Bronco" };
+    	String[] modelStrings = { "select model" };
     	{
             cbxModel = new JComboBox(modelStrings);
+
             cbxModel.setBounds(36, 100, 178, 27);
             panelEdit.add(cbxModel);
     	}
-//    	{
-//    		cbxModel =  (MutableComboBoxModel) cbxModel;  
-//  //  		((Component) cbxModel).setBounds(36, 100, 178, 27);
-//    		panelEdit.add((Component) cbxModel);
-//    	}
+
     	{
     		JLabel lblModel = new JLabel("Mileage");
     		lblModel.setBounds(36, 130, 61, 16);

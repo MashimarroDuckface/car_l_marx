@@ -19,11 +19,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JComboBox;
+
 import controller.LogonController.SubmitListener;
 import security.PasswordEncrypt;
 import views.*;
 import model.DbAccess;
 import model.MakeObject;
+import model.ModelObject;
 
 public class VehicleTabbedController
 {
@@ -33,18 +36,25 @@ public class VehicleTabbedController
 	private VehicleTabbedController vTController;
 	public String make;
 	
-	public VehicleTabbedController(TabbedVehicleFrame tabFrame, DbAccess dbHandle, MainController mController)
+	public VehicleTabbedController( DbAccess dbHandle, MainController mController)
 	{
-		this.tabView = tabFrame;
+//		this.tabView = tabFrame;
 		this.dbHandle = dbHandle;
 		this.mController = mController;
 		this.vTController = this;
+	//	this.tabView.setController(this);
+	}
+	
+	public void getTabViewObject(TabbedVehicleFrame tabFrame)
+	{
+		this.tabView = tabFrame;
 	}
 	
 	public void startTabbedView()
 	{
+		this.tabView.addCbxMakeListener(new CbxMakeListener());
 	//	this.tabView.addSubmitButtonListener(new SubmitListener());
-		System.out.println("VehicleTabbedController - startTabbedView");
+	//	System.out.println("VehicleTabbedController - startTabbedView");
 	//	this.tabView.addCbxMakeListener(new CbxMakeListener());
 	}
 	
@@ -56,21 +66,23 @@ public class VehicleTabbedController
 		return makeList;
 	}
 	
-	public String[] getModel()
+	public ArrayList<ModelObject> getModel(String make)
 	{
-		String[] model = null;
-		return model;
+		int makeId = dbHandle.getMakeId(make);
+		ArrayList<ModelObject>modelList = this.dbHandle.getModel(makeId);
+		return modelList;
 	}
-	
+/*  This listener isn't working.  I don't know why at this time  - Lise Nov 11, 2014 */	
 	public class CbxMakeListener implements ActionListener 
 	{
 		public void actionPerformed(ActionEvent e) {
-	//		JComboBox cb = (JComboBox)e.getSource();
-	        String selectedMake = (String)tabView.cbxMake.getSelectedItem();
-	        make = selectedMake;
+			JComboBox cb = (JComboBox)e.getSource();
+	        String selectedMake = (String)cb.getSelectedItem();
+	        System.out.println("VehicleTabbedController - CbxMakeListener --> make selected " + selectedMake);
+	        int makeId = dbHandle.getMakeId(selectedMake);
 	        
-	        String[] models = dbHandle.getModel(make);
-	        for (int i = 0 ; i < models.length ; i++ )
+	        ArrayList<ModelObject> models = dbHandle.getModel(makeId);
+	       for ( ModelObject m:models)
 	        {
 //	        	tabView.cbxModel.addElement(models[i]);   //  add models to the model combo box based on the make that was selected
 	        }

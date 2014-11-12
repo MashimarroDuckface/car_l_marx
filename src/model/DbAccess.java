@@ -105,7 +105,7 @@ public class DbAccess
 			getMake = conn.prepareStatement(getMakeString);
 			String getMakeIdString = "SELECT `idMake` FROM  `makeTable` WHERE  `make` =  ?";
 			getMakeId = conn.prepareStatement(getMakeIdString);
-			String getModelString = "SELECT * FROM `modelTable` WHERE `idMake` = ?";
+			String getModelString = "SELECT model from modelTable WHERE idMake = ? ";
 			getModel = conn.prepareStatement(getModelString);
 
 		} catch (SQLException e)
@@ -166,17 +166,19 @@ public class DbAccess
 	{
 		try
 		{
+			this.getMakeId.setString(1, make);
 			ResultSet resultSet = this.getMakeId.executeQuery();
 			while (resultSet.next())
 			{
 				System.out.println ("inside DbAccess - getMake " +
 						resultSet.getInt("idMake"));
+				System.out.println("DbAccess - getMakeId " + resultSet.getInt("idMake"));
 				return resultSet.getInt("idMake");
 				
 			}
 		} catch (SQLException e)
 		{
-			System.out.println("error on fetch of get make " + e);
+			System.out.println("error on fetch of get makeId " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("Make Table: " + e.getErrorCode());
@@ -185,20 +187,19 @@ public class DbAccess
 		return -999;			//  no make found - problem - should not happen
 	}
 	
-	public String[] getModel(String make)
+	public ArrayList<ModelObject> getModel(int make)
 	{
-		int idMake = this.getMakeId(make);
-		String[] model = null;
-		int i = 0;
+		ArrayList<ModelObject> modelList = new ArrayList<ModelObject>();
 		try
 		{
-			this.getModel.setInt(1, idMake);
+			this.getModel.setInt(1, make);
 			ResultSet resultSet = this.getModel.executeQuery();
 			while (resultSet.next())
 			{
 				System.out.println ("inside DbAccess - getModel " +
-						resultSet.getInt("idModel") + "  "  +  resultSet.getString("Model"));
-				model[i++] = resultSet.getString("model");
+						   resultSet.getString("model"));
+				ModelObject modelItem = new ModelObject( resultSet.getString("model"));
+				modelList.add(modelItem);
 				
 			}
 		} catch (SQLException e)
@@ -209,7 +210,7 @@ public class DbAccess
 			System.out.println("Model Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
-		return model;
+		return modelList;
 	}
 
 	public String getPass(String userName)

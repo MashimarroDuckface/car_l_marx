@@ -31,13 +31,11 @@ public class VehicleTabbedStart
 		this.userName = userName;
 		DbHandle = DbAccess.getInstance();
 		this.mController = mController;
-		vController = new VehicleTabbedController(vehicleTabView, DbHandle, mController);
-	//	vehicleTabView = new TabbedVehicleFrame(vController);
+	//	this.vehicleTabView = new TabbedVehicleFrame();
+		vController = new VehicleTabbedController(DbHandle, mController);
+		vehicleTabView = new TabbedVehicleFrame(vController);
 	
 		vController.startTabbedView();
-		System.out.println("VehicleTabbedStart - constructor");
-//		vehicleTabView.setVisible(true);
-		System.out.println("VehicleTabbedStart - constructor - final");
 		createAndShowGUI();
 	}
 	
@@ -48,9 +46,9 @@ public class VehicleTabbedStart
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	    //Create and set up the content pane.
-	    TabbedVehicleFrame newContentPane = new TabbedVehicleFrame(vController);
-	    newContentPane.setOpaque(true); //content panes must be opaque
-	    frame.setContentPane(newContentPane);
+	    TabbedVehicleFrame vehicleTabView = new TabbedVehicleFrame(vController);
+	    vehicleTabView.setOpaque(true); //content panes must be opaque
+	    frame.setContentPane(vehicleTabView);
 
 	    //Display the window.
 	    frame.pack();

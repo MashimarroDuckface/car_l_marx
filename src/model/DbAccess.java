@@ -45,6 +45,8 @@ public class DbAccess
 	private PreparedStatement getModelforVehicle;
 	private PreparedStatement updateMileage;
 	private PreparedStatement getMileage;
+	private PreparedStatement getNickName;
+	
 
 	/**
 	 * Note that the constructor is listed as private. That will disallow the
@@ -130,6 +132,9 @@ public class DbAccess
 			getMileage = conn.prepareStatement(getMileageString);
 			String updateMileageString = "UPDATE  `vehicleTable` SET  `mileage` = ? WHERE  `idVehicle` = ? ";
 			updateMileage = conn.prepareStatement(updateMileageString);
+			
+			String getNickNameString = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
+			getNickName = conn.prepareStatement(getNickNameString );
 
 		} catch (SQLException e)
 		{
@@ -156,6 +161,27 @@ public class DbAccess
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("User Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getNickName(int vehicleId)
+	{
+		try
+		{
+			this.getNickName.setInt(1, vehicleId);
+			ResultSet resultSet = this.getNickName.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("nickName");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of  nick name " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VehicleTable " + e.getErrorCode());
 			e.printStackTrace();
 		}
 		return null;

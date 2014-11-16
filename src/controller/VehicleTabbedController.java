@@ -123,6 +123,12 @@ public class VehicleTabbedController
 		ArrayList<ModelObject>modelList = this.dbHandle.getModel(makeId);
 		return modelList;
 	}
+	
+	public String getNickName()
+	{
+		return this.dbHandle.getNickName(this.vehicleId);
+	}
+	
 /*  This listener isn't working.  I don't know why at this time  - Lise Nov 11, 2014 */	
 	public class CbxMakeListener implements ActionListener 
 	{

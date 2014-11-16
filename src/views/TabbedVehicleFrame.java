@@ -39,6 +39,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.SwingConstants;
 
 public class TabbedVehicleFrame extends JPanel
 {
@@ -54,6 +55,9 @@ public class TabbedVehicleFrame extends JPanel
 	public JTextField txtCurrentMileage;
 	public JTextField txtMileage;
 	private DefaultComboBoxModel model;
+	
+	private String nickName;
+	public JLabel lblNickName;
 
 	/**
 	 * Create the panel.
@@ -63,6 +67,9 @@ public class TabbedVehicleFrame extends JPanel
 	{
 		this.vTController = vTController;
 		this.vTController.getTabViewObject(this);
+		
+		this.nickName = vTController.getNickName();
+		
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		JComponent panel1 = makeTextPanelSummary("");
@@ -115,22 +122,25 @@ public class TabbedVehicleFrame extends JPanel
 
 		panelSummary.setLayout(null);
 		{
+			createLblNickName(panelSummary);
+		}
+		{
 			JLabel lblSummary = new JLabel("Vehicle Name, Info Summary");
-			lblSummary.setBounds(21, 20, 225, 19);
+			lblSummary.setBounds(21, 49, 225, 19);
 			lblSummary.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 			lblSummary.setBackground(new Color(255, 255, 240));
 			panelSummary.add(lblSummary);
 		}
 		{
 			JLabel lblToDo = new JLabel("To-Do List");
-			lblToDo.setBounds(21, 80, 225, 19);
+			lblToDo.setBounds(21, 182, 225, 19);
 			lblToDo.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 			lblToDo.setBackground(new Color(255, 255, 240));
 			panelSummary.add(lblToDo);
 		}
 		{
 			JLabel lblOptional = new JLabel("Optional Information");
-			lblOptional.setBounds(21, 140, 225, 19);
+			lblOptional.setBounds(21, 331, 225, 19);
 			lblOptional.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 			lblOptional.setBackground(new Color(255, 255, 240));
 			panelSummary.add(lblOptional);
@@ -149,6 +159,9 @@ public class TabbedVehicleFrame extends JPanel
 			JLabel lblMake = new JLabel("Make");
 			lblMake.setBounds(36, 30, 61, 16);
 			panelEdit.add(lblMake);
+		}
+		{
+			createLblNickName(panelEdit);
 		}
 		/* Get the values for the make combo box from the db */
 		ArrayList<MakeObject> makes = vTController.getMake();
@@ -252,17 +265,6 @@ public class TabbedVehicleFrame extends JPanel
 			panelEdit.add(txtMileage);
 			txtMileage.setColumns(10);
 		}
-		{
-			JLabel lblOilChange = new JLabel("Last Oil Change");
-			lblOilChange.setBounds(36, 180, 134, 16);
-			panelEdit.add(lblOilChange);
-		}
-		{
-			JTextField txtOilChange = new JTextField();
-			txtOilChange.setBounds(36, 200, 134, 28);
-			panelEdit.add(txtOilChange);
-			txtOilChange.setColumns(10);
-		}
 
 		return panelEdit;
 	}
@@ -275,10 +277,13 @@ public class TabbedVehicleFrame extends JPanel
 		panelMaint.setLayout(null);
 		{
 			JLabel lblSummary = new JLabel("Vehicle Name, Info Summary");
-			lblSummary.setBounds(21, 21, 225, 19);
+			lblSummary.setBounds(19, 76, 225, 19);
 			lblSummary.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 			lblSummary.setBackground(new Color(255, 255, 240));
 			panelMaint.add(lblSummary);
+		}
+		{
+			createLblNickName(panelMaint);
 		}
 
 		return panelMaint;
@@ -292,10 +297,13 @@ public class TabbedVehicleFrame extends JPanel
 		panelTires.setLayout(null);
 		{
 			JLabel lblSummary = new JLabel("Tires tab");
-			lblSummary.setBounds(25, 16, 225, 19);
+			lblSummary.setBounds(22, 68, 225, 19);
 			lblSummary.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 			lblSummary.setBackground(new Color(255, 255, 240));
 			panelTires.add(lblSummary);
+		}
+		{
+			createLblNickName(panelTires);
 		}
 
 		return panelTires;
@@ -305,16 +313,18 @@ public class TabbedVehicleFrame extends JPanel
 			controller.VehicleTabbedController.addTxtMileageListener addTxtMileageListener)
 	{
 		this.txtMileage.addFocusListener(addTxtMileageListener);
-		// txtMileage.addFocusListener(new FocusAdapter() {
-		// @Override
-		// public void focusLost(FocusEvent arg0) {
-		// }
-		// });
-
-//		System.out.println("TabbedVehicleFrame addTxtMileageListener");
-
 	}
 
+	private void createLblNickName(JPanel currentPanel)
+	{
+		this.lblNickName = new JLabel(this.nickName);
+		lblNickName.setFont(new Font("Lucida Grande", Font.BOLD, 17));
+		this.lblNickName.setHorizontalAlignment(SwingConstants.CENTER);
+		this.lblNickName.setIcon(null);
+		this.lblNickName.setBounds(36, 6, 320, 16);
+		currentPanel.add(this.lblNickName);
+	}
+	
 	public void addCbxMakeListener(ActionListener listenerForMakeCbx)
 	{
 		this.cbxMake.addActionListener(listenerForMakeCbx);

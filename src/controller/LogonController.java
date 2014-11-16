@@ -41,6 +41,7 @@ public class LogonController
 	public boolean startLogon()
 	{
 		this.loginView.addSubmitButtonListener(new SubmitListener());
+		this.loginView.addEnter(new SubmitListener());              //  Call same method as Submit button
 		this.loginView.addbtnForgotButtonListener(new ForgotListener());	
 		this.loginView.addbtnNewUserButtonListener(new NewUserListener());		
 		this.loginView.addbtnResetButtonListener(new ResetListener());	

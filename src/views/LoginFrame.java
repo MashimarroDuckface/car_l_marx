@@ -28,6 +28,9 @@ import javax.swing.JSeparator;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class LoginFrame extends JFrame
 {
@@ -58,7 +61,7 @@ public class LoginFrame extends JFrame
 	{
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 250, 350);
+		setBounds(100, 100, 250, 400);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 240));
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(250, 250, 210), new Color(248, 248, 255), new Color(211, 211, 211), new Color(128, 128, 128)));
@@ -87,15 +90,15 @@ public class LoginFrame extends JFrame
 		contentPane.add(btnLoginSubmit);
 		
 		btnForgotPassword = new JButton("Forgot Password ?");
-		btnForgotPassword.setBounds(25, 180, 200, 28);
+		btnForgotPassword.setBounds(25, 200, 200, 28);
 		contentPane.add(btnForgotPassword);
 		
 		btnResetPassword = new JButton("Reset Password");
-		btnResetPassword.setBounds(25, 220, 200, 28);
+		btnResetPassword.setBounds(25, 240, 200, 28);
 		contentPane.add(btnResetPassword);
 		
 		btnSignUp = new JButton("Sign Up");
-		btnSignUp.setBounds(25, 285, 200, 29);
+		btnSignUp.setBounds(25, 332, 200, 29);
 		contentPane.add(btnSignUp);
 		
 		lblSignIn = new JLabel("Sign In");
@@ -108,12 +111,19 @@ public class LoginFrame extends JFrame
 		contentPane.add(separator);
 		
 		separator_1 = new JSeparator();
-		separator_1.setBounds(25, 273, 350, 12);
+		separator_1.setBackground(new Color(210, 180, 140));
+		separator_1.setBounds(25, 308, 200, 12);
 		contentPane.add(separator_1);
 		
 		lblNewUser = new JLabel("New User");
-		lblNewUser.setBounds(25, 255, 100, 16);
+		lblNewUser.setBounds(27, 280, 100, 16);
 		contentPane.add(lblNewUser);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setBackground(new Color(222, 184, 135));
+		separator_2.setForeground(new Color(210, 180, 140));
+		separator_2.setBounds(25, 180, 200, 12);
+		contentPane.add(separator_2);
 		
 		paintLoginPanel();
 	}
@@ -140,6 +150,15 @@ public class LoginFrame extends JFrame
 		return this.txtUserPassword.getPassword();
 	}
 	
+	/**
+	 *   Fires when user presses enter after entering password
+	 * @param listenerForEnter
+	 */
+	public void addEnter(ActionListener listenerForEnter) 
+	{
+		this.txtUserPassword.addActionListener(listenerForEnter);
+	}
+	
 	public void addSubmitButtonListener(ActionListener listenerForSubmitButton) 
 	{
 		this.btnLoginSubmit.addActionListener(listenerForSubmitButton);
@@ -158,5 +177,4 @@ public class LoginFrame extends JFrame
 	{
 		btnResetPassword.addActionListener(listenerForResetButton);
 	}
-
 }

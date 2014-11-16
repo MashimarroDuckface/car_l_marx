@@ -35,9 +35,16 @@ public class DbAccess
 	private PreparedStatement getUserSalt;
 	private PreparedStatement getUserPass;
 	private PreparedStatement getUserVehicles;
+	private PreparedStatement updateMakeAndModel;
 	private PreparedStatement getMake;
+	private PreparedStatement getMakeForVehicle;
 	private PreparedStatement getMakeId;
+	private PreparedStatement getMakeIdFromMake;
 	private PreparedStatement getModel;
+	private PreparedStatement getModelIdFromModel;
+	private PreparedStatement getModelforVehicle;
+	private PreparedStatement updateMileage;
+	private PreparedStatement getMileage;
 
 	/**
 	 * Note that the constructor is listed as private. That will disallow the
@@ -99,18 +106,34 @@ public class DbAccess
 			getUserSalt = conn.prepareStatement(getUserSaltString);
 			String getUserPassString = "SELECT `userPassword` FROM  `userTable` WHERE  `userName` LIKE  ?";
 			getUserPass = conn.prepareStatement(getUserPassString);
-			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
+			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, vehicleTable.nickName, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
-			String getMakeString = "SELECT * FROM `makeTable` ORDER BY `make`";
+
+			String getMakeString = "UPDATE  `vehicleTable` SET  `idMake` = ?, `idModel` = ? WHERE  `idVehicle` = ? ";
+			updateMakeAndModel = conn.prepareStatement(getMakeString);
+			getMakeString = "SELECT * FROM `makeTable` ORDER BY `make`";
 			getMake = conn.prepareStatement(getMakeString);
+			getMakeString = "SELECT make FROM `makeTable` INNER JOIN vehicleTable ON vehicleTable.idMake = makeTable.idMake WHERE vehicleTable.idVehicle = ?";
+			getMakeForVehicle = conn.prepareStatement(getMakeString);
+			getMakeString = "SELECT idMake FROM  `makeTable` WHERE  `make` =  ?";
+			getMakeIdFromMake = conn.prepareStatement(getMakeString);
 			String getMakeIdString = "SELECT `idMake` FROM  `makeTable` WHERE  `make` =  ?";
 			getMakeId = conn.prepareStatement(getMakeIdString);
-			String getModelString = "SELECT model from modelTable WHERE idMake = ? ";
+			String getModelString = "SELECT  `idModel` FROM  `modelTable`WHERE  `model` =  ?";
+			getModelIdFromModel = conn.prepareStatement(getModelString);
+			getModelString = "SELECT model from modelTable WHERE idMake = ? ";
 			getModel = conn.prepareStatement(getModelString);
+			getModelString = "SELECT model FROM `modelTable` INNER JOIN vehicleTable ON vehicleTable.idModel = modelTable.idModel WHERE vehicleTable.idVehicle = ?";
+			getModelforVehicle = conn.prepareStatement(getModelString);
+
+			String getMileageString = "SELECT `mileage` FROM `vehicleTable` WHERE `idVehicle` = ? ";
+			getMileage = conn.prepareStatement(getMileageString);
+			String updateMileageString = "UPDATE  `vehicleTable` SET  `mileage` = ? WHERE  `idVehicle` = ? ";
+			updateMileage = conn.prepareStatement(updateMileageString);
 
 		} catch (SQLException e)
 		{
-			System.out.println("problem creating prepared statements " + e);
+			System.err.println("problem creating prepared statements " + e);
 		}
 	}
 
@@ -123,8 +146,8 @@ public class DbAccess
 			ResultSet resultSet = this.getUserSalt.executeQuery();
 			while (resultSet.next())
 			{
-				System.out.println ("inside DbAccess - getSalt " +
-				 resultSet.getString("passSalt"));
+//				System.out.println("inside DbAccess - getSalt "
+//						+ resultSet.getString("passSalt"));
 				return resultSet.getString("passSalt");
 			}
 		} catch (SQLException e)
@@ -137,7 +160,26 @@ public class DbAccess
 		}
 		return null;
 	}
-	
+
+	public void updateMakeAndModel(int vehicleId, int makeId, int modelId)
+	{
+	//	System.out.println("DbAccess - updateMakeAndModel " + modelId);
+		try
+		{
+			this.updateMakeAndModel.setInt(1, makeId);
+			this.updateMakeAndModel.setInt(2, modelId);
+			this.updateMakeAndModel.setInt(3, vehicleId);
+			this.updateMakeAndModel.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on update of make and model " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("vehicle Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+
 	public ArrayList<MakeObject> getMake()
 	{
 		ArrayList<MakeObject> makeList = new ArrayList<MakeObject>();
@@ -146,9 +188,11 @@ public class DbAccess
 			ResultSet resultSet = this.getMake.executeQuery();
 			while (resultSet.next())
 			{
-//				System.out.println ("inside DbAccess - getMake " +
-//						resultSet.getInt("idMake") + "  "  +  resultSet.getString("make"));
-				MakeObject makeItem = new MakeObject(resultSet.getString("make"));
+				// System.out.println ("inside DbAccess - getMake " +
+				// resultSet.getInt("idMake") + "  " +
+				// resultSet.getString("make"));
+				MakeObject makeItem = new MakeObject(
+						resultSet.getString("make"));
 				makeList.add(makeItem);
 			}
 		} catch (SQLException e)
@@ -161,7 +205,7 @@ public class DbAccess
 		}
 		return makeList;
 	}
-	
+
 	public int getMakeId(String make)
 	{
 		try
@@ -170,11 +214,8 @@ public class DbAccess
 			ResultSet resultSet = this.getMakeId.executeQuery();
 			while (resultSet.next())
 			{
-				System.out.println ("inside DbAccess - getMake " +
-						resultSet.getInt("idMake"));
 				System.out.println("DbAccess - getMakeId " + resultSet.getInt("idMake"));
 				return resultSet.getInt("idMake");
-				
 			}
 		} catch (SQLException e)
 		{
@@ -184,9 +225,93 @@ public class DbAccess
 			System.out.println("Make Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
-		return -999;			//  no make found - problem - should not happen
+		return -999; // no make found - problem - should not happen
+	}
+
+	public int getMakeIdForVehicle(int make)
+	{
+		try
+		{
+			this.getMakeId.setInt(1, make);
+			ResultSet resultSet = this.getMakeId.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getInt("idMake");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get makeId " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return -999; // no make found - problem - should not happen
+	}
+
+	public String getMakeForVehicle(int vehicleId)
+	{
+		try
+		{
+			this.getMakeForVehicle.setInt(1, vehicleId);
+			ResultSet resultSet = this.getMakeForVehicle.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("make");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get make for vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null; // no make found - problem - should not happen
 	}
 	
+	public int getMakeIdFromMake(String make)
+	{
+		try
+		{
+			this.getMakeIdFromMake.setString(1, make);
+			ResultSet resultSet = this.getMakeIdFromMake.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getInt("idMake");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get make id from make " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return -999;
+	}
+
+	public int getModelIdFromModel(String model)
+	{
+		try
+		{
+			this.getModelIdFromModel.setString(1, model);
+			ResultSet resultSet = this.getModelIdFromModel.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getInt("idModel");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get model id from model " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Model Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return -999;
+	}
+
 	public ArrayList<ModelObject> getModel(int make)
 	{
 		ArrayList<ModelObject> modelList = new ArrayList<ModelObject>();
@@ -196,11 +321,12 @@ public class DbAccess
 			ResultSet resultSet = this.getModel.executeQuery();
 			while (resultSet.next())
 			{
-				System.out.println ("inside DbAccess - getModel " +
-						   resultSet.getString("model"));
-				ModelObject modelItem = new ModelObject( resultSet.getString("model"));
+				// System.out.println ("inside DbAccess - getModel " +
+				// resultSet.getString("model"));
+				ModelObject modelItem = new ModelObject(
+						resultSet.getString("model"));
 				modelList.add(modelItem);
-				
+
 			}
 		} catch (SQLException e)
 		{
@@ -211,6 +337,74 @@ public class DbAccess
 			e.printStackTrace();
 		}
 		return modelList;
+	}
+
+	public String getModelString(int vehicleId)
+	{
+		try
+		{
+			this.getModelforVehicle.setInt(1, vehicleId);
+			ResultSet resultSet = this.getModelforVehicle.executeQuery();
+			while (resultSet.next())
+			{
+				// System.out.println ("inside DbAccess - getModel " +
+				// resultSet.getString("model"));
+				return resultSet.getString("model");
+
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get model string" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Model Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void updateMileage(int vehicleId, int newMileage)
+	{
+		int cleanVehicleId = sanitizeNum(vehicleId);
+		int cleanNewMileage = sanitizeNum(newMileage);
+
+		int oldMileage = this.getMileage(cleanVehicleId);
+		int newMiles = oldMileage + cleanNewMileage;
+		try
+		{
+			this.updateMileage.setInt(1, newMiles);
+			this.updateMileage.setInt(2, cleanVehicleId);
+			this.updateMileage.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of update mileage" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("vehicle table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+
+	public int getMileage(int vehicleId)
+	{
+		int cleanVehicleId = sanitizeNum(vehicleId);
+		try
+		{
+			this.getMileage.setInt(1, cleanVehicleId);
+			ResultSet resultSet = this.getMileage.executeQuery();
+			while (resultSet.next())
+			{
+				return (resultSet.getInt("mileage"));
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get mileage" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("vehicle table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	public String getPass(String userName)
@@ -284,20 +478,22 @@ public class DbAccess
 		}
 		return false; // did not get the user
 	}
-	
+
 	public ArrayList<VehiclesObject> getUserVehicle(String userName)
 	{
-		
-		System.out.println("**************************************************DbAccess - getUserVehicle");
+
+//		System.out
+//				.println("**************************************************DbAccess - getUserVehicle");
 		String cleanUserName = sanitizeUserName(userName);
 		try
 		{
 			this.getUserVehicles.setString(1, cleanUserName);
 			ResultSet resultSet = this.getUserVehicles.executeQuery();
 			ArrayList<VehiclesObject> vehicleList = new ArrayList<VehiclesObject>();
-			
-	//		System.out.println("Vehicles row count " + resultSet.getInt("rowCount"));
-			
+
+			// System.out.println("Vehicles row count " +
+			// resultSet.getInt("rowCount"));
+
 			while (resultSet.next())
 			{
 				// TODO loop through result set getting all vehicles. Set them
@@ -305,11 +501,19 @@ public class DbAccess
 				System.out.println(resultSet.getInt("idvehicle") + " "
 						+ resultSet.getString("makeTable.make") + " "
 						+ resultSet.getString("modelTable.model") + " "
+						+ resultSet.getString("vehicleTable.nickName") + " "
 						+ resultSet.getString("colorTable.color") + " "
 						+ resultSet.getString("licensePlate") + " "
-						+ resultSet.getInt("mileage") );
-				
-				VehiclesObject vehicle = new VehiclesObject(resultSet.getInt("idvehicle") , resultSet.getString("makeTable.make"), resultSet.getString("modelTable.model"), resultSet.getString("colorTable.color"), resultSet.getString("licensePlate"), resultSet.getInt("mileage"));
+						+ resultSet.getInt("mileage"));
+
+				VehiclesObject vehicle = new VehiclesObject(
+						resultSet.getInt("idvehicle"),
+						resultSet.getString("makeTable.make"),
+						resultSet.getString("modelTable.model"),
+						resultSet.getString("vehicleTable.nickName"),
+						resultSet.getString("colorTable.color"),
+						resultSet.getString("licensePlate"),
+						resultSet.getInt("mileage"));
 				vehicleList.add(vehicle);
 			}
 			return vehicleList;
@@ -348,24 +552,6 @@ public class DbAccess
 		}
 	}
 
-	// public void deleteVehicle(String name)
-	// {
-	// try
-	// {
-	// // this.conn1.setAutoCommit(false);
-	// // using the prepared statement
-	// deleteVehicle.setString(1, name);
-	// deleteVehicle.execute();
-	// } catch (SQLException e)
-	// {
-	// System.out.println("error on delete of vehicle " + e);
-	// System.out.println("SQLException: " + e.getMessage());
-	// System.out.println("SQLState: " + e.getSQLState());
-	// System.out.println("VendorError: " + e.getErrorCode());
-	// e.printStackTrace();
-	// }
-	// }
-
 	private String sanitizeUserName(String name)
 	{
 		// TODO sanitize name string
@@ -379,5 +565,11 @@ public class DbAccess
 	{
 		// TODO sanitize email string - use regular expression?
 		return email;
+	}
+
+	private int sanitizeNum(int num)
+	{
+		// TODO actually sanitize the number
+		return num;
 	}
 }

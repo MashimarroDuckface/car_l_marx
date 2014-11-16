@@ -16,6 +16,8 @@ package controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,13 +37,15 @@ public class VehicleTabbedController
 	private MainController mController;
 	private VehicleTabbedController vTController;
 	public String make;
+	public int vehicleId;
 	
-	public VehicleTabbedController( DbAccess dbHandle, MainController mController)
+	public VehicleTabbedController( DbAccess dbHandle, MainController mController, int vehicleId)
 	{
 //		this.tabView = tabFrame;
 		this.dbHandle = dbHandle;
 		this.mController = mController;
 		this.vTController = this;
+		this.vehicleId = vehicleId;
 	//	this.tabView.setController(this);
 	}
 	
@@ -53,17 +57,64 @@ public class VehicleTabbedController
 	public void startTabbedView()
 	{
 		this.tabView.addCbxMakeListener(new CbxMakeListener());
-	//	this.tabView.addSubmitButtonListener(new SubmitListener());
-	//	System.out.println("VehicleTabbedController - startTabbedView");
-	//	this.tabView.addCbxMakeListener(new CbxMakeListener());
+		this.tabView.addTxtMileageListener(new addTxtMileageListener());
+		//  set mileage on screen
+//		System.out.println("currentMileage  " + this.getCurrentMileage());
+	//	this.tabView.txtMileage.setText(Integer.toString(this.getCurrentMileage())); 
+		this.tabView.txtCurrentMileage.setText("my new mileage"); 
+//		System.out.println("VehicleTabbedController - startTabbedView");
+	}
+	
+	public void updateMileage(String newMileage)
+	{
+		int miles = Integer.parseInt(newMileage);
+		
+		dbHandle.updateMileage(this.vehicleId, miles);
+		
+//		System.out.println("new miles " + miles);
+		
+	}
+	
+	public int getCurrentMileage()
+	{
+		return dbHandle.getMileage(this.vehicleId);
+	}
+	
+	public String getCurrentMileageString()
+	{
+		return Integer.toString(dbHandle.getMileage(this.vehicleId));
+	}
+	
+	public void updateMakeAndModel(String model, String make)
+	{
+		
+		int makeInt = dbHandle.getMakeIdFromMake(make);
+	//	System.out.println("VehicleTabbedController UpdateMakeAndModel - makeInt " + makeInt + " String make-->  " + make);
+		int modelInt = dbHandle.getModelIdFromModel(model);
+		dbHandle.updateMakeAndModel(vehicleId, makeInt, modelInt);
 	}
 	
 	public ArrayList<MakeObject> getMake()
 	{
-		System.out.println("VehicleTabbedController - getMake");
+//		System.out.println("VehicleTabbedController - getMake");
 		ArrayList<MakeObject> makeList = this.dbHandle.getMake();
 		
 		return makeList;
+	}
+	
+	public String getMakeString()
+	{
+		return this.dbHandle.getMakeForVehicle(this.vehicleId);
+	}
+	
+	public int getMakeId()
+	{
+		return this.dbHandle.getMakeIdForVehicle(this.vehicleId);
+	}
+	
+	public String getModelString()
+	{
+		return this.dbHandle.getModelString(vehicleId);
 	}
 	
 	public ArrayList<ModelObject> getModel(String make)
@@ -78,7 +129,7 @@ public class VehicleTabbedController
 		public void actionPerformed(ActionEvent e) {
 			JComboBox cb = (JComboBox)e.getSource();
 	        String selectedMake = (String)cb.getSelectedItem();
-	        System.out.println("VehicleTabbedController - CbxMakeListener --> make selected " + selectedMake);
+	//        System.out.println("VehicleTabbedController - CbxMakeListener --> make selected " + selectedMake);
 	        int makeId = dbHandle.getMakeId(selectedMake);
 	        
 	        ArrayList<ModelObject> models = dbHandle.getModel(makeId);
@@ -93,6 +144,24 @@ public class VehicleTabbedController
 	{
 		public void actionPerformed(ActionEvent e) {
 
+		}
+	}
+	//  This listener is not working - no idea what is going on
+	public class addTxtMileageListener implements FocusListener
+	{
+		public addTxtMileageListener()
+		{
+	//		System.out.println ("VehicleTabbedController - class addTxtMileageListener");
+		}
+		@Override
+		public void focusGained(FocusEvent arg0)
+		{
+		}
+
+		@Override
+		public void focusLost(FocusEvent arg0)
+		{
+	//		System.out.println("Lost focus on additional mileage text area");
 		}
 	}
 }

@@ -41,6 +41,8 @@ public class MainController
 	
 	public void vehicleTabbedFrame(String userName)
 	{
-		VehicleTabbedStart vController = new VehicleTabbedStart(this, userName);
+		//  TODO  get vehicleId from table
+		int vehicleId = 1;
+		VehicleTabbedStart vController = new VehicleTabbedStart(this, userName, vehicleId);
 	}
 }

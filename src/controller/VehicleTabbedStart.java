@@ -25,14 +25,15 @@ public class VehicleTabbedStart
 	private DbAccess DbHandle;
 	private VehicleTabbedController vController;
 	private MainController mController;
+	private int vehicleId;
 	
-	public VehicleTabbedStart(MainController mController, String userName)
+	public VehicleTabbedStart(MainController mController, String userName, int vehicleId)
 	{	
 		this.userName = userName;
+		this.vehicleId = vehicleId;
 		DbHandle = DbAccess.getInstance();
 		this.mController = mController;
-	//	this.vehicleTabView = new TabbedVehicleFrame();
-		vController = new VehicleTabbedController(DbHandle, mController);
+		vController = new VehicleTabbedController(DbHandle, mController, this.vehicleId);
 		vehicleTabView = new TabbedVehicleFrame(vController);
 	
 		vController.startTabbedView();

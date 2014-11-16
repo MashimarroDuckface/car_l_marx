@@ -14,17 +14,18 @@
 package views;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -34,6 +35,10 @@ import controller.VehicleTabbedController;
 import model.*;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class TabbedVehicleFrame extends JPanel
 {
@@ -44,35 +49,50 @@ public class TabbedVehicleFrame extends JPanel
 	private JPanel panelTires;
 	private VehicleTabbedController vTController;
 	public JComboBox cbxMake;
-//	public MutableComboBoxModel cbxModel;
 	public JComboBox cbxModel;
 	private ArrayList<ModelObject> modelList;
+	public JTextField txtCurrentMileage;
+	public JTextField txtMileage;
+	private DefaultComboBoxModel model;
 
 	/**
 	 * Create the panel.
 	 */
 	public TabbedVehicleFrame(VehicleTabbedController vTController)
-//	public TabbedVehicleFrame()
+	// public TabbedVehicleFrame()
 	{
 		this.vTController = vTController;
 		this.vTController.getTabViewObject(this);
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		JComponent panel1 = makeTextPanelSummary("");
-		tabbedPane.addTab("Summary", new ImageIcon(TabbedVehicleFrame.class.getResource("/images/car.png")), panel1, "");
+		tabbedPane.addTab(
+				"Summary",
+				new ImageIcon(TabbedVehicleFrame.class
+						.getResource("/images/car.png")), panel1, "");
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
 		JComponent panel2 = makeTextPanelEditCar("Panel #2");
-		tabbedPane.addTab("Edit Car", new ImageIcon(TabbedVehicleFrame.class.getResource("/images/car-purple-icon.png")), panel2, "");
+		tabbedPane.addTab(
+				"Edit Car",
+				new ImageIcon(TabbedVehicleFrame.class
+						.getResource("/images/car-purple-icon.png")), panel2,
+				"");
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
 		JComponent panel3 = makeTextMaintenance("Panel #3");
-		tabbedPane.addTab("Maintenance", new ImageIcon(TabbedVehicleFrame.class.getResource("/images/wrench.png")), panel3, "");
+		tabbedPane.addTab(
+				"Maintenance",
+				new ImageIcon(TabbedVehicleFrame.class
+						.getResource("/images/wrench.png")), panel3, "");
 		tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
 		JComponent panel4 = makeTextPanelTires("");
-		panel4.setPreferredSize(new Dimension(400, 260));
-		tabbedPane.addTab("Tires", new ImageIcon(TabbedVehicleFrame.class.getResource("/images/tire.png")), panel4, "");
+		panel4.setPreferredSize(new Dimension(400, 500));
+		tabbedPane.addTab(
+				"Tires",
+				new ImageIcon(TabbedVehicleFrame.class
+						.getResource("/images/tire.png")), panel4, "");
 		tabbedPane.setEnabledAt(3, true);
 		tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
 
@@ -82,10 +102,12 @@ public class TabbedVehicleFrame extends JPanel
 		// The following line enables to use scrolling tabs.
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
+
 	public void setController(VehicleTabbedController vTController)
 	{
 		this.vTController = vTController;
 	}
+
 	protected JComponent makeTextPanelSummary(String text)
 	{
 		panelSummary = new JPanel(false);
@@ -123,76 +145,124 @@ public class TabbedVehicleFrame extends JPanel
 		panelEdit.setBackground(new Color(255, 255, 240));
 
 		panelEdit.setLayout(null);
-  //  	String[] makeStrings = { "Select Make", "Honda", "Accord", "Ford", "Chevrolet", "Toyota", "Tesla" };
-    	{
-    		JLabel lblMake = new JLabel("Make");
-    		lblMake.setBounds(36, 30, 61, 16);
-    		panelEdit.add(lblMake);
-    	}
-    	/*  Get the values for the make combo box from the db  */
-    	ArrayList<MakeObject> makes = vTController.getMake();
-    	String makeArray [] = new String[makes.size()];
-    	int i = 0;
-    	for (MakeObject m:makes )
-    	{
-    		makeArray[i++] = m.make;
-    	}
-    	{
-            cbxMake = new JComboBox(makeArray);
-            cbxMake.addActionListener(new ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-            		System.out.println("Combobox action performed");
-            		JComboBox cb = (JComboBox)e.getSource();
-        	        String selectedMake = (String)cb.getSelectedItem();
-        	        System.out.println("make selected " + selectedMake);
-        	        modelList = vTController.getModel(selectedMake);     //  model list for model combobox
-                    DefaultComboBoxModel model = (DefaultComboBoxModel) cbxModel.getModel();
-                    model.removeAllElements();
-                    for (ModelObject m:modelList)
-                    {
-                    	model.addElement(m.model);
-                    }
-                    cbxModel.setModel(model);
-            	}
-            });
-            cbxMake.setBounds(36, 50, 178, 27);
-            panelEdit.add(cbxMake);
-    	}
-    	{
-    		JLabel lblModel = new JLabel("Model");
-    		lblModel.setBounds(36, 80, 61, 16);
-    		panelEdit.add(lblModel);
-    	}
-    	String[] modelStrings = { "select model" };
-    	{
-            cbxModel = new JComboBox(modelStrings);
+		{
+			JLabel lblMake = new JLabel("Make");
+			lblMake.setBounds(36, 30, 61, 16);
+			panelEdit.add(lblMake);
+		}
+		/* Get the values for the make combo box from the db */
+		ArrayList<MakeObject> makes = vTController.getMake();
+		String makeArray[] = new String[makes.size()];
+		int i = 0;
+		for (MakeObject m : makes)
+		{
+			makeArray[i++] = m.make;
+		}
+		{
+			cbxMake = new JComboBox(makeArray);
+			cbxMake.setSelectedItem(vTController.getMakeString());
+			cbxMake.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					JComboBox cb = (JComboBox) e.getSource();
+					String selectedMake = (String) cb.getSelectedItem();
+					modelList = vTController.getModel(selectedMake); //  get models based on the make selected
+					
+					model = (DefaultComboBoxModel) cbxModel.getModel();
+					model.removeAllElements();
+					model.addElement("-select model");
+					for (ModelObject m : modelList)
+					{
+						model.addElement(m.model);
+					}
+					cbxModel.setModel(model);
+				}
+			});
+			cbxMake.setBounds(36, 50, 178, 27);
+			panelEdit.add(cbxMake);
+		}
+		{
+			JLabel lblModel = new JLabel("Model");
+			lblModel.setBounds(36, 80, 61, 16);
+			panelEdit.add(lblModel);
+		}
 
-            cbxModel.setBounds(36, 100, 178, 27);
-            panelEdit.add(cbxModel);
-    	}
+		String[] modelStrings =
+		{ vTController.getModelString() };
+		{
+			cbxModel = new JComboBox(modelStrings);
+			cbxModel.addPropertyChangeListener(new PropertyChangeListener()
+			{
+				public void propertyChange(PropertyChangeEvent arg0)
+				{
+					vTController.updateMakeAndModel(cbxModel.getSelectedItem().toString(),cbxMake.getSelectedItem().toString());
+				}
+			});
+			cbxModel.setBounds(36, 100, 178, 27);
+			/* Model stuff */
+			modelList = vTController.getModel(vTController.getMakeString()); // model list for combobox model
+																				
+			model = (DefaultComboBoxModel) cbxModel.getModel();
+			model.removeAllElements();
+			model.addElement("-select model");
+			for (ModelObject m : modelList)
+			{
+				model.addElement(m.model);
+			}
+			cbxModel.setSelectedItem(vTController.getModelString());
+			cbxModel.setModel(model);
+			panelEdit.add(cbxModel);
+		}
 
-    	{
-    		JLabel lblModel = new JLabel("Mileage");
-    		lblModel.setBounds(36, 130, 61, 16);
-    		panelEdit.add(lblModel);
-    	}
-    	{
-            JTextField txtMileage = new JTextField();
-            txtMileage.setBounds(36, 150, 134, 28);
-            panelEdit.add(txtMileage);
-            txtMileage.setColumns(10);
-    	}
-    	{
-    		JLabel lblOilChange = new JLabel("Last Oil Change");
-    		lblOilChange.setBounds(36, 180, 134, 16);
-    		panelEdit.add(lblOilChange);
-    	}
-    	{
-    		JTextField txtOilChange = new JTextField();
-    		txtOilChange.setBounds(36, 200, 134, 28);
-    		panelEdit.add(txtOilChange);
-    		txtOilChange.setColumns(10);
-    	}
+		{
+			JLabel lblModel = new JLabel("Mileage");
+			lblModel.setBounds(36, 130, 61, 16);
+			panelEdit.add(lblModel);
+		}
+
+		JLabel lblNewLabel = new JLabel("Additonal Mileage");
+		lblNewLabel.setBounds(240, 130, 134, 16);
+		panelEdit.add(lblNewLabel);
+
+		txtCurrentMileage = new JTextField();
+		txtCurrentMileage.setBackground(new Color(255, 255, 240));
+		txtCurrentMileage.setEditable(false);
+		txtCurrentMileage.setBounds(36, 149, 134, 28);
+		txtCurrentMileage.setText(this.vTController.getCurrentMileageString());
+		panelEdit.add(txtCurrentMileage);
+		txtCurrentMileage.setColumns(10);
+		// tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+		{
+			txtMileage = new JFormattedTextField(NumberFormat.getInstance());
+			txtMileage.addFocusListener(new FocusAdapter()
+			{
+				@Override
+				public void focusLost(FocusEvent arg0)
+				{
+					vTController.updateMileage(txtMileage.getText());
+					txtCurrentMileage.setText(vTController
+							.getCurrentMileageString());
+					txtMileage.setText("");
+
+	//				System.out.println("Focus Lost event");
+				}
+			});
+			txtMileage.setBounds(240, 149, 134, 28);
+			panelEdit.add(txtMileage);
+			txtMileage.setColumns(10);
+		}
+		{
+			JLabel lblOilChange = new JLabel("Last Oil Change");
+			lblOilChange.setBounds(36, 180, 134, 16);
+			panelEdit.add(lblOilChange);
+		}
+		{
+			JTextField txtOilChange = new JTextField();
+			txtOilChange.setBounds(36, 200, 134, 28);
+			panelEdit.add(txtOilChange);
+			txtOilChange.setColumns(10);
+		}
 
 		return panelEdit;
 	}
@@ -230,10 +300,23 @@ public class TabbedVehicleFrame extends JPanel
 
 		return panelTires;
 	}
-	
-	public void addCbxMakeListener(ActionListener listenerForMakeCbx) 
+
+	public void addTxtMileageListener(
+			controller.VehicleTabbedController.addTxtMileageListener addTxtMileageListener)
+	{
+		this.txtMileage.addFocusListener(addTxtMileageListener);
+		// txtMileage.addFocusListener(new FocusAdapter() {
+		// @Override
+		// public void focusLost(FocusEvent arg0) {
+		// }
+		// });
+
+//		System.out.println("TabbedVehicleFrame addTxtMileageListener");
+
+	}
+
+	public void addCbxMakeListener(ActionListener listenerForMakeCbx)
 	{
 		this.cbxMake.addActionListener(listenerForMakeCbx);
 	}
-
 }

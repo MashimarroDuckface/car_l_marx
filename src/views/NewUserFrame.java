@@ -52,7 +52,7 @@ public class NewUserFrame extends JFrame
 	{
 		setTitle("Car-L-Marx");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 500);
+		setBounds(100, 100, 260, 500);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 240));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -114,7 +114,7 @@ public class NewUserFrame extends JFrame
 		contentPane.add(txtEmail);
 		
 		btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(147, 414, 117, 29);
+		btnSubmit.setBounds(66, 409, 117, 29);
 		contentPane.add(btnSubmit);
 	}
 	

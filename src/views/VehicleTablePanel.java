@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
 import javax.swing.BoxLayout;
 
 public class VehicleTablePanel extends JPanel {
@@ -26,38 +27,30 @@ public class VehicleTablePanel extends JPanel {
 
     public VehicleTablePanel(ArrayList <VehiclesObject> vlist) {
         
-    //    Object[][] data = null;
-     
+    	VehicleTableModel data=new VehicleTableModel();
+    	
         String[] columnNames = {"Color",
                                 "License Plate",
                                 "Vehicle ID",
                                 "Make",
                                 "Model",
                                 "Mileage"};
+        
 
-//        vehiclelist = vlist;
-//        System.out.println(vehiclelist);
-//		int i=0;
-//		for (VehiclesObject v:vehiclelist)
-//		{
-//			data[i][0]=v.color;
-//			data[i][1]=v.licensePlate;
-//			data[i][2]=v.idvehicle;
-//			data[i][3]=v.make;
-//			data[i][4]=v.model;
-//			data[i][5]=v.mileage;
-//			i++;
-//			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
-//		}
-		
-		Object[][] data = {{"Blue", "MMR 234", "3", "GM", "Truck", "45602"},
-				{"White", "SWV 123", "1", "Toyota", "Camry", "43100"},
-				{"Red", "FTT 123", "2", "Toyota", "Corolla", "34500"},
-				{"Black", "TR9472", "4", "Tesla", "S", "25300"}
-		};
-		
+        
+        JTable table = new JTable(data);
+        int i=0;
+        for(VehiclesObject v:vlist){
+        data.setValueAt(v.idvehicle, i, 0);
+    	data.setValueAt(v.make, i, 1);
+    	data.setValueAt(v.model, i, 2);
+    	data.setValueAt(v.color, i, 3);
+    	data.setValueAt(v.licensePlate, i, 4);
+    	data.setValueAt(v.mileage, i, 5);
+    	i++;
+        }
 
-        final JTable table = new JTable(data, columnNames);
+	
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
 

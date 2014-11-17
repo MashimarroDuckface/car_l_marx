@@ -46,6 +46,8 @@ public class DbAccess
 	private PreparedStatement updateMileage;
 	private PreparedStatement getMileage;
 	private PreparedStatement getNickName;
+	private PreparedStatement updateTiresOnStudsDate;
+	private PreparedStatement getStudsOnDate;
 	
 
 	/**
@@ -135,6 +137,13 @@ public class DbAccess
 			
 			String getNickNameString = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
 			getNickName = conn.prepareStatement(getNickNameString );
+
+			String update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
+			updateTiresOnStudsDate = conn.prepareStatement(update );
+			String get = "SELECT `onStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
+			getStudsOnDate = conn.prepareStatement(get );
+			
+			
 
 		} catch (SQLException e)
 		{
@@ -411,6 +420,23 @@ public class DbAccess
 		}
 	}
 
+	public void updateTiresStudsOnDate(int vehicleId, String currentDate)
+	{
+		try
+		{
+			this.updateTiresOnStudsDate.setString(1, currentDate);
+			this.updateTiresOnStudsDate.setInt(2, vehicleId);
+			this.updateTiresOnStudsDate.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of update studs on date" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+
 	public int getMileage(int vehicleId)
 	{
 		int cleanVehicleId = sanitizeNum(vehicleId);
@@ -452,6 +478,29 @@ public class DbAccess
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("User Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String getStudsOnDate(int vehicleId)
+	{
+		try
+		{
+			this.getStudsOnDate.setInt(1, vehicleId);
+			ResultSet resultSet = this.getStudsOnDate.executeQuery();
+			while (resultSet.next())
+			{
+				// System.out.println ("inside DbAccess - getPass " +
+				// resultSet.getString("userPassword"));
+				return resultSet.getString("onStudsDate");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of studs on date " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
 		return null;
@@ -598,4 +647,5 @@ public class DbAccess
 		// TODO actually sanitize the number
 		return num;
 	}
+
 }

@@ -38,6 +38,8 @@ public class VehicleTabbedController
 	private VehicleTabbedController vTController;
 	public String make;
 	public int vehicleId;
+	private String studsOnDate;
+	private String studsOffDate;
 	
 	public VehicleTabbedController( DbAccess dbHandle, MainController mController, int vehicleId)
 	{
@@ -128,6 +130,29 @@ public class VehicleTabbedController
 	{
 		return this.dbHandle.getNickName(this.vehicleId);
 	}
+	public void updateStudsOnDate(String currentDate)
+	{
+		dbHandle.updateTiresStudsOnDate(vehicleId, currentDate);
+	}
+	public int getStudsOnMonth()
+	{   //  Get month first - gets date from db
+		getStudsOnDate();
+		
+		return Integer.parseInt(this.studsOnDate.substring(5, 7))-1;      //  Months are 0 based
+	}
+	public int getStudsOnYear()
+	{
+		return Integer.parseInt(this.studsOnDate.substring(0, 4));
+	}
+	public int getStudsOnDay()
+	{
+		return Integer.parseInt(this.studsOnDate.substring(8, 10));
+	}
+	
+	private void getStudsOnDate()
+	{
+		this.studsOnDate = dbHandle.getStudsOnDate(vehicleId);
+	}
 	
 /*  This listener isn't working.  I don't know why at this time  - Lise Nov 11, 2014 */	
 	public class CbxMakeListener implements ActionListener 
@@ -170,4 +195,5 @@ public class VehicleTabbedController
 	//		System.out.println("Lost focus on additional mileage text area");
 		}
 	}
+
 }

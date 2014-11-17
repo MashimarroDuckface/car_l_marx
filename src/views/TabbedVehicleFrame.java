@@ -20,6 +20,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -39,7 +42,13 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+
 import javax.swing.SwingConstants;
+import javax.swing.JTree;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 public class TabbedVehicleFrame extends JPanel
 {
@@ -58,6 +67,9 @@ public class TabbedVehicleFrame extends JPanel
 	
 	private String nickName;
 	public JLabel lblNickName;
+	private JTextField txtTireType;
+	
+	private JDatePickerImpl datePicker;
 
 	/**
 	 * Create the panel.
@@ -100,6 +112,7 @@ public class TabbedVehicleFrame extends JPanel
 				"Tires",
 				new ImageIcon(TabbedVehicleFrame.class
 						.getResource("/images/tire.png")), panel4, "");
+		
 		tabbedPane.setEnabledAt(3, true);
 		tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
 
@@ -296,14 +309,72 @@ public class TabbedVehicleFrame extends JPanel
 
 		panelTires.setLayout(null);
 		{
-			JLabel lblSummary = new JLabel("Tires tab");
-			lblSummary.setBounds(22, 68, 225, 19);
-			lblSummary.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-			lblSummary.setBackground(new Color(255, 255, 240));
-			panelTires.add(lblSummary);
+			createLblNickName(panelTires);
 		}
 		{
-			createLblNickName(panelTires);
+			JLabel lblTIreType = new JLabel("Tire Type");
+			lblTIreType.setBounds(22, 68, 225, 19);
+			lblTIreType.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+			lblTIreType.setBackground(new Color(255, 255, 240));
+			panelTires.add(lblTIreType);
+		}
+		{
+			txtTireType = new JTextField("Temp");
+			txtTireType.setBackground(new Color(255, 255, 240));
+			txtTireType.setEditable(false);
+			txtTireType.setBounds(22, 102, 134, 28);
+			panelTires.add(txtTireType);
+			txtTireType.setColumns(10);
+		}
+		{
+			JLabel lblStudsOn = new JLabel("Date Studs can be installed");
+			lblStudsOn.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+			lblStudsOn.setBounds(22, 147, 212, 16);
+			panelTires.add(lblStudsOn);
+		}
+		{  //  Calendar
+			/*  this stuff is for the new vehicle 
+//			int month = Calendar.getInstance().get(Calendar.MONTH);
+//			int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+//			int year = Calendar.getInstance().get(Calendar.YEAR);
+//			
+//			UtilDateModel model = new UtilDateModel();
+//			model.setDate(year, month, day);
+//			model.setSelected(true);
+ * 
+ *
+ */
+			int month = vTController.getStudsOnMonth();
+			int day = vTController.getStudsOnDay();
+			int year = vTController.getStudsOnYear();
+			
+			UtilDateModel model = new UtilDateModel();
+			model.setDate(year, month, day);
+			model.setSelected(true);
+			
+			Properties p = new Properties();
+			p.put("text.today", "Today");
+			p.put("text.month", "Month");
+			p.put("text.year", "Year");
+			
+			JDatePanelImpl studsOnDate = new JDatePanelImpl(model, p);
+			datePicker = new JDatePickerImpl(studsOnDate, new DateLabelFormatter());
+			datePicker.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					Date selectedDate = (Date) datePicker.getModel().getValue();
+					System.out.println("Selected Date " + selectedDate);
+					java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+					String currentDate = sdf.format(selectedDate);
+					System.out.println("Current Date " + currentDate);
+					
+					vTController.updateStudsOnDate(currentDate);
+				}
+			});
+			datePicker.setBounds(22,175,160,30);
+			panelTires.add(datePicker);
 		}
 
 		return panelTires;

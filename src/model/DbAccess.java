@@ -117,7 +117,7 @@ public class DbAccess
 			getUserSalt = conn.prepareStatement(getUserSaltString);
 			String getUserPassString = "SELECT `userPassword` FROM  `userTable` WHERE  `userName` LIKE  ?";
 			getUserPass = conn.prepareStatement(getUserPassString);
-			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, vehicleTable.nickName, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ?";
+			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, vehicleTable.nickName, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ? ORDER BY `idVehicle`";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
 
 			String getMakeString = "UPDATE  `vehicleTable` SET  `idMake` = ?, `idModel` = ? WHERE  `idVehicle` = ? ";

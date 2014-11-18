@@ -171,6 +171,11 @@ public class DbAccess
 		}
 	}
 
+	/**
+	 *   Get salt for user name
+	 * @param userName
+	 * @return String  - salt for password encryption
+	 */
 	public String getSalt(String userName)
 	{
 		String cleanUserName = sanitizeUserName(userName);

@@ -70,6 +70,10 @@ public class TabbedVehicleFrame extends JPanel
 	private JTextField txtTireType;
 	
 	private JDatePickerImpl datePicker;
+	private JLabel lblCarNickName;
+	private JTextField txtNickName;
+	private JLabel lblLicensePlate;
+	private JTextField txtLicensePlate;
 
 	/**
 	 * Create the panel.
@@ -176,6 +180,16 @@ public class TabbedVehicleFrame extends JPanel
 		{
 			createLblNickName(panelEdit);
 		}
+/*		{  this isn't working!  Very Bad!  Lise Nov 17, 2014
+//			panelSummary.remove(lblNickName);
+//			createLblNickName(panelSummary);
+//			panelEdit.remove(lblNickName);
+//			createLblNickName(panelEdit);
+//			panelMaint.remove(lblNickName);
+//			createLblNickName(panelMaint);
+//			panelTires.remove(lblNickName);
+//			createLblNickName(panelTires);
+		}     */
 		/* Get the values for the make combo box from the db */
 		ArrayList<MakeObject> makes = vTController.getMake();
 		String makeArray[] = new String[makes.size()];
@@ -205,7 +219,7 @@ public class TabbedVehicleFrame extends JPanel
 					cbxModel.setModel(model);
 				}
 			});
-			cbxMake.setBounds(36, 50, 178, 27);
+			cbxMake.setBounds(36, 50, 170, 27);
 			panelEdit.add(cbxMake);
 		}
 		{
@@ -225,7 +239,7 @@ public class TabbedVehicleFrame extends JPanel
 					vTController.updateMakeAndModel(cbxModel.getSelectedItem().toString(),cbxMake.getSelectedItem().toString());
 				}
 			});
-			cbxModel.setBounds(36, 100, 178, 27);
+			cbxModel.setBounds(36, 100, 170, 27);
 			/* Model stuff */
 			modelList = vTController.getModel(vTController.getMakeString()); // model list for combobox model
 																				
@@ -240,41 +254,107 @@ public class TabbedVehicleFrame extends JPanel
 			cbxModel.setModel(model);
 			panelEdit.add(cbxModel);
 		}
-
+		{
+			lblCarNickName = new JLabel("Car Nick Name");
+			lblCarNickName.setBounds(240, 30, 100, 16);
+			panelEdit.add(lblCarNickName);
+		}
+		{
+			txtNickName = new JTextField();
+			txtNickName.setText(vTController.getNickName());
+			txtNickName.addFocusListener(new FocusAdapter() 
+			{
+				@Override
+				public void focusLost(FocusEvent arg0)
+				{
+					vTController.updateNickName(txtNickName.getText());
+					nickName = txtNickName.getText();
+					lblNickName.setText("");
+					createLblNickName(panelEdit);
+				}
+			});
+			txtNickName.setBounds(230, 50, 134, 28);
+			panelEdit.add(txtNickName);
+			txtNickName.setColumns(10);
+		}	
+		//  TODO  add color arraylist
+		{
+		JLabel lblColor = new JLabel("Color");
+		lblColor.setBounds(240, 80, 61, 16);
+		panelEdit.add(lblColor);
+		}
+		ArrayList<String> colors = vTController.getColor();
+		String colorArray[] = new String[colors.size()];
+		int k = 0;
+		for (String c : colors)
+		{
+			colorArray[k++] = c;
+		}
+		{
+		JComboBox cbxColor = new JComboBox(colorArray);
+		cbxColor.setSelectedItem(vTController.getColorString());
+		cbxColor.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				JComboBox cb = (JComboBox) e.getSource();
+				String selectedColor = (String) cb.getSelectedItem();
+				vTController.updateColor(selectedColor);
+			}
+		});
+		cbxColor.setBounds(240, 100, 124, 27);
+		panelEdit.add(cbxColor);
+		}
+		{
+			lblLicensePlate = new JLabel("License Plate");
+			lblLicensePlate.setBounds(36, 139, 150, 16);
+			panelEdit.add(lblLicensePlate);
+		}
+		{
+			txtLicensePlate = new JTextField();
+			txtLicensePlate.setText(vTController.getLicensePlate());
+			txtLicensePlate.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent arg0) {
+					System.out.println("lost focus on license plate field");
+					vTController.updateLicensePlate(txtLicensePlate.getText());
+				}
+			});
+			txtLicensePlate.setBounds(36, 161, 134, 28);
+			panelEdit.add(txtLicensePlate);
+			txtLicensePlate.setColumns(10);
+		}
 		{
 			JLabel lblModel = new JLabel("Mileage");
-			lblModel.setBounds(36, 130, 61, 16);
+			lblModel.setBounds(36, 220, 61, 16);
 			panelEdit.add(lblModel);
 		}
 
 		JLabel lblNewLabel = new JLabel("Additonal Mileage");
-		lblNewLabel.setBounds(240, 130, 134, 16);
+		lblNewLabel.setBounds(240, 220, 134, 16);
 		panelEdit.add(lblNewLabel);
 
 		txtCurrentMileage = new JTextField();
 		txtCurrentMileage.setBackground(new Color(255, 255, 240));
 		txtCurrentMileage.setEditable(false);
-		txtCurrentMileage.setBounds(36, 149, 134, 28);
+		txtCurrentMileage.setBounds(36, 250, 134, 28);
 		txtCurrentMileage.setText(this.vTController.getCurrentMileageString());
 		panelEdit.add(txtCurrentMileage);
 		txtCurrentMileage.setColumns(10);
-		// tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 		{
 			txtMileage = new JFormattedTextField(NumberFormat.getInstance());
 			txtMileage.addFocusListener(new FocusAdapter()
 			{
 				@Override
-				public void focusLost(FocusEvent arg0)
-				{
+				public void focusLost(FocusEvent arg0) {
 					vTController.updateMileage(txtMileage.getText());
 					txtCurrentMileage.setText(vTController
 							.getCurrentMileageString());
 					txtMileage.setText("");
-
-	//				System.out.println("Focus Lost event");
 				}
 			});
-			txtMileage.setBounds(240, 149, 134, 28);
+			txtMileage.setText("");
+			txtMileage.setBounds(230, 250, 134, 28);
 			panelEdit.add(txtMileage);
 			txtMileage.setColumns(10);
 		}
@@ -388,7 +468,12 @@ public class TabbedVehicleFrame extends JPanel
 
 	private void createLblNickName(JPanel currentPanel)
 	{
-		this.lblNickName = new JLabel(this.nickName);
+//		if (this.lblNickName != null)
+//		{
+//			currentPanel.remove(lblNickName);
+//		}
+		this.lblNickName = new JLabel("");
+		lblNickName.setText(this.nickName);
 		lblNickName.setFont(new Font("Lucida Grande", Font.BOLD, 17));
 		this.lblNickName.setHorizontalAlignment(SwingConstants.CENTER);
 		this.lblNickName.setIcon(null);

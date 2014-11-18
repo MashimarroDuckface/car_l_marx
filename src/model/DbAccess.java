@@ -37,6 +37,9 @@ public class DbAccess
 	private PreparedStatement getUserVehicles;
 	private PreparedStatement updateMakeAndModel;
 	private PreparedStatement getMake;
+	private PreparedStatement getColor;
+	private PreparedStatement getColorId;
+	private PreparedStatement getColorString;
 	private PreparedStatement getMakeForVehicle;
 	private PreparedStatement getMakeId;
 	private PreparedStatement getMakeIdFromMake;
@@ -47,6 +50,10 @@ public class DbAccess
 	private PreparedStatement getMileage;
 	private PreparedStatement getNickName;
 	private PreparedStatement updateTiresOnStudsDate;
+	private PreparedStatement updateNickName;
+	private PreparedStatement updateColor;
+	private PreparedStatement updateLicensePlate;
+	private PreparedStatement getLicensePlate;
 	private PreparedStatement getStudsOnDate;
 	
 
@@ -135,16 +142,29 @@ public class DbAccess
 			String updateMileageString = "UPDATE  `vehicleTable` SET  `mileage` = ? WHERE  `idVehicle` = ? ";
 			updateMileage = conn.prepareStatement(updateMileageString);
 			
-			String getNickNameString = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
-			getNickName = conn.prepareStatement(getNickNameString );
+			String get = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
+			getNickName = conn.prepareStatement(get );
+			get = "SELECT  `licensePlate` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
+			getLicensePlate = conn.prepareStatement(get );
+			get = "SELECT idColor FROM  `colorTable` WHERE  `Color` =  ?";
+			getColorId = conn.prepareStatement(get);
 
 			String update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
 			updateTiresOnStudsDate = conn.prepareStatement(update );
-			String get = "SELECT `onStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
+			update = "UPDATE `vehicleTable` SET `nickName`= ? WHERE `idVehicle` = ?";
+			updateNickName = conn.prepareStatement(update );
+			update = "UPDATE `vehicleTable` SET `licensePlate`= ? WHERE `idVehicle` = ?";
+			updateLicensePlate = conn.prepareStatement(update );
+			update = "UPDATE `vehicleTable` SET `idColor`= ? WHERE `idVehicle` = ?";
+			updateColor = conn.prepareStatement(update );
+			
+			get = "SELECT `onStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
 			getStudsOnDate = conn.prepareStatement(get );
+			get = "SELECT  `Color` FROM `colorTable` ORDER BY Color";
+			getColor = conn.prepareStatement(get );
+			get = "SELECT  `Color` FROM `colorTable`  INNER JOIN vehicleTable ON colorTable.idColor = vehicleTable.idColor  WHERE vehicleTable.idVehicle = ?";
+			getColorString = conn.prepareStatement(get );
 			
-			
-
 		} catch (SQLException e)
 		{
 			System.err.println("problem creating prepared statements " + e);
@@ -240,6 +260,50 @@ public class DbAccess
 		}
 		return makeList;
 	}
+	
+	public ArrayList<String> getColor()
+	{
+		ArrayList<String> colorList = new ArrayList<String>();
+		try
+		{
+			ResultSet resultSet = this.getColor.executeQuery();
+			while (resultSet.next())
+			{
+				String colorItem = new String(
+						resultSet.getString("color"));
+				colorList.add(colorItem);
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get color " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Color Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return colorList;
+	}
+
+	public String getColorString(int vehicleId)
+	{
+		try
+		{
+			this.getColorString.setInt(1, vehicleId);
+			ResultSet resultSet = this.getColorString.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("color");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get color " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Color Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return ""; // no make found - problem - should not happen
+	}
 
 	public int getMakeId(String make)
 	{
@@ -258,6 +322,27 @@ public class DbAccess
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return -999; // no make found - problem - should not happen
+	}
+	
+	public int getColorId(String color)
+	{
+		try
+		{
+			this.getColorId.setString(1, color);
+			ResultSet resultSet = this.getColorId.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getInt("idColor");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get colorId " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Color Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
 		return -999; // no make found - problem - should not happen
@@ -382,10 +467,7 @@ public class DbAccess
 			ResultSet resultSet = this.getModelforVehicle.executeQuery();
 			while (resultSet.next())
 			{
-				// System.out.println ("inside DbAccess - getModel " +
-				// resultSet.getString("model"));
 				return resultSet.getString("model");
-
 			}
 		} catch (SQLException e)
 		{
@@ -413,6 +495,23 @@ public class DbAccess
 		} catch (SQLException e)
 		{
 			System.out.println("error on fetch of update mileage" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("vehicle table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateColor(int vehicleId, int colorId)
+	{
+		try
+		{
+			this.updateColor.setInt(1, colorId);
+			this.updateColor.setInt(2, vehicleId);
+			this.updateColor.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of update color" + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("vehicle table: " + e.getErrorCode());
@@ -458,7 +557,69 @@ public class DbAccess
 		}
 		return 0;
 	}
+	
+	public int updateNickName(int vehicleId, String nickName)
+	{
+		int cleanVehicleId = sanitizeNum(vehicleId);
+		String cleanNickName = sanitizeString(nickName);
+		try
+		{
+			this.updateNickName.setString(1, cleanNickName);
+			this.updateNickName.setInt(2, cleanVehicleId);
+			this.updateNickName.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on update of nick name" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("vehicle table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int updateLicensePlate(int vehicleId, String licensePlate)
+	{
+		int cleanVehicleId = sanitizeNum(vehicleId);
+		String cleanLicensePlate = sanitizeString(licensePlate);
+		try
+		{
+			this.updateLicensePlate.setString(1, cleanLicensePlate);
+			this.updateLicensePlate.setInt(2, cleanVehicleId);
+			this.updateLicensePlate.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on update of license plate" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("vehicle table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
+	public String getLicensePlate(int vehicleId)
+	{
+		try
+		{
+			this.getLicensePlate.setInt(1, vehicleId);
+			ResultSet resultSet = this.getLicensePlate.executeQuery();
+			while (resultSet.next())
+			{
+				// System.out.println ("inside DbAccess - getPass " +
+				// resultSet.getString("userPassword"));
+				return resultSet.getString("licensePlate");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of license plate " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Vehicle Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public String getPass(String userName)
 	{
 		String cleanUserName = sanitizeUserName(userName);
@@ -641,11 +802,18 @@ public class DbAccess
 		// TODO sanitize email string - use regular expression?
 		return email;
 	}
+	
+	private String sanitizeString(String string)
+	{
+		// TODO sanitize email string - use regular expression?
+		return string;
+	}
 
 	private int sanitizeNum(int num)
 	{
 		// TODO actually sanitize the number
 		return num;
 	}
+
 
 }

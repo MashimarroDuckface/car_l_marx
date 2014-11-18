@@ -77,6 +77,11 @@ public class VehicleTabbedController
 		
 	}
 	
+	public void updateNickName(String nickName)
+	{
+		dbHandle.updateNickName(this.vehicleId, nickName);
+	}
+	
 	public int getCurrentMileage()
 	{
 		return dbHandle.getMileage(this.vehicleId);
@@ -98,7 +103,6 @@ public class VehicleTabbedController
 	
 	public ArrayList<MakeObject> getMake()
 	{
-//		System.out.println("VehicleTabbedController - getMake");
 		ArrayList<MakeObject> makeList = this.dbHandle.getMake();
 		
 		return makeList;
@@ -130,6 +134,35 @@ public class VehicleTabbedController
 	{
 		return this.dbHandle.getNickName(this.vehicleId);
 	}
+	
+	public void updateLicensePlate(String licensePlate)
+	{
+		dbHandle.updateLicensePlate(this.vehicleId, licensePlate);
+	}
+	
+	public void updateColor(String color)
+	{
+		int idColor = dbHandle.getColorId(color);
+		dbHandle.updateColor(this.vehicleId, idColor);
+	}
+	
+	public String getLicensePlate()
+	{
+		return dbHandle.getLicensePlate(this.vehicleId);
+	}
+	
+	public ArrayList<String> getColor()
+	{
+		ArrayList<String> colorList = dbHandle.getColor();
+		
+		return colorList;
+	}
+	
+	public String getColorString()
+	{
+		return dbHandle.getColorString(vehicleId);
+	}
+	
 	public void updateStudsOnDate(String currentDate)
 	{
 		dbHandle.updateTiresStudsOnDate(vehicleId, currentDate);

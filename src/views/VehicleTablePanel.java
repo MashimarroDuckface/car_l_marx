@@ -17,6 +17,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import java.awt.Component;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
 
 public class VehicleTablePanel extends JPanel {
     private boolean DEBUG = false;
@@ -56,21 +59,16 @@ public class VehicleTablePanel extends JPanel {
                 }
             });
         }
-        setLayout(null);
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 0, 291, 300);
-
-        //Add the scroll pane to this panel.
-        add(scrollPane);
         
         btnSubmit = new JButton("Go to next screen");
-		btnSubmit.setBounds(291, 138, 159, 25);
-		add(btnSubmit);
 		
 		btnAddNewCar = new JButton("Add New Car");
-		btnAddNewCar.setBounds(291, 182, 159, 25);
+		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		add(scrollPane);
+		add(btnSubmit);
 		add(btnAddNewCar);
     }
 

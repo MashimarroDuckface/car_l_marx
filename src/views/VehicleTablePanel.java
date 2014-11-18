@@ -16,9 +16,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
+import java.awt.Component;
 
 public class VehicleTablePanel extends JPanel {
     private boolean DEBUG = false;
+    public JButton btnEdit;
+    public JButton btnAddNewCar;
     public JButton btnSubmit;
     ArrayList<VehiclesObject> vehiclelist;
     VehicleController vController;
@@ -26,59 +29,49 @@ public class VehicleTablePanel extends JPanel {
 
     public VehicleTablePanel(ArrayList <VehiclesObject> vlist) {
         
-    //    Object[][] data = null;
-     
+    	ArrayList<Object[]> data = new ArrayList<Object[]>();
+    	int i=0;
+    	for(VehiclesObject v:vlist){
+    		data.add(new Object[]{v.idvehicle, v.make, v.model, v.color, v.licensePlate, v.mileage});
+    	}
+    	
         String[] columnNames = {"Color",
                                 "License Plate",
                                 "Vehicle ID",
                                 "Make",
                                 "Model",
                                 "Mileage"};
+        
 
-//        vehiclelist = vlist;
-//        System.out.println(vehiclelist);
-//		int i=0;
-//		for (VehiclesObject v:vehiclelist)
-//		{
-//			data[i][0]=v.color;
-//			data[i][1]=v.licensePlate;
-//			data[i][2]=v.idvehicle;
-//			data[i][3]=v.make;
-//			data[i][4]=v.model;
-//			data[i][5]=v.mileage;
-//			i++;
-//			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
-//		}
-		
-		Object[][] data = {{"Blue", "MMR 234", "3", "GM", "Truck", "45602"},
-				{"White", "SWV 123", "1", "Toyota", "Camry", "43100"},
-				{"Red", "FTT 123", "2", "Toyota", "Corolla", "34500"},
-				{"Black", "TR9472", "4", "Tesla", "S", "25300"}
-		};
-		
+        
+        JTable table = new JTable(new VehicleTableModel(data, columnNames));
 
-        final JTable table = new JTable(data, columnNames);
+	
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
 
         if (DEBUG) {
             table.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    printDebugData(table);
                 }
             });
         }
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setLayout(null);
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(0, 0, 291, 300);
 
         //Add the scroll pane to this panel.
         add(scrollPane);
         
-		btnSubmit = new JButton("Go to next screen");
-		btnSubmit.setBounds(10, 220, 95, 29);
+        btnSubmit = new JButton("Go to next screen");
+		btnSubmit.setBounds(291, 138, 159, 25);
 		add(btnSubmit);
+		
+		btnAddNewCar = new JButton("Add New Car");
+		btnAddNewCar.setBounds(291, 182, 159, 25);
+		add(btnAddNewCar);
     }
 
     private void printDebugData(JTable table) {
@@ -116,7 +109,7 @@ public class VehicleTablePanel extends JPanel {
         frame.pack();
         frame.setVisible(true);
     }*/
-
+    
 	public void addSubmitButtonListener(ActionListener listenerForSubmitButton) 
 	{
 		this.btnSubmit.addActionListener(listenerForSubmitButton);

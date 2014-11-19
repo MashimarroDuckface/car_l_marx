@@ -661,7 +661,7 @@ public class DbAccess
 			this.updateUserPassword.setString(1, newPass);
 			this.updateUserPassword.setString(2, cleanUserName);
 			
-			this.getUserPass.execute();
+			this.updateUserPassword.execute();
 
 		} catch (SQLException e)
 		{

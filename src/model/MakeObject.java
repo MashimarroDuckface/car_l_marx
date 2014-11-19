@@ -21,4 +21,5 @@ public class MakeObject
 	{
 		this.make = make;
 	}
+	
 }

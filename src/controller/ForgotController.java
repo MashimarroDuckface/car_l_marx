@@ -72,16 +72,16 @@ public class ForgotController
 			//TODO Check if email adresses match
 			//TODO SQL side stuff: temp PW, email user
 			String email = userView.txtEmail.getText();
-			String reEmail = userView.txtEmail.getText();
+			String reEmail = userView.txtReenterEmail.getText();
 			if (email.isEmpty())
 			{
 				userView.lblEmail.setText("Please enter your email address");
 				userView.lblEmail.setForeground(Color.RED);
 				return;
 			}
-			if (compareTo(email, reEmail))
+			if (email.compareTo(reEmail)!=0)
 			{
-				userView.lblReenterEmail.setText("Password fields must match");
+				userView.lblReenterEmail.setText("Email must match");
 				userView.lblReenterEmail.setForeground(Color.RED);
 				return;
 			}

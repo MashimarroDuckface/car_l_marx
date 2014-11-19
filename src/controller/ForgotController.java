@@ -71,10 +71,29 @@ public class ForgotController
 			}
 			//TODO Check if email adresses match
 			//TODO SQL side stuff: temp PW, email user
+			String email = userView.txtEmail.getText();
+			String reEmail = userView.txtEmail.getText();
+			if (email.isEmpty())
+			{
+				userView.lblEmail.setText("Please enter your email address");
+				userView.lblEmail.setForeground(Color.RED);
+				return;
+			}
+			if (compareTo(email, reEmail))
+			{
+				userView.lblReenterEmail.setText("Password fields must match");
+				userView.lblReenterEmail.setForeground(Color.RED);
+				return;
+			}
+			
+			
+			
 			userView.setVisible(false); //you can't see me!
 			userView.dispose(); //Destroy the JFrame object
 	//		mController.goodUser(userName);
 		}
+		
+		
 	}
 	
 	public class CancelListener implements ActionListener 

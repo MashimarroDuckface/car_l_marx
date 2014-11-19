@@ -30,6 +30,7 @@ public class DbAccess
 
 	// Prepared statements
 	private PreparedStatement insertUser;
+	private PreparedStatement updateUserPassword;
 	private PreparedStatement getAllUser;
 	private PreparedStatement getValidUser;
 	private PreparedStatement getUserSalt;
@@ -109,6 +110,9 @@ public class DbAccess
 			// User statements
 			String insertUserString = "INSERT INTO `car_l_marx`.`userTable` (`userName`, `userPassword`, `passSalt`, `fName`, `lname`, `userEmail`) VALUES (?, ?, ?, ?, ?, ?)";
 			insertUser = conn.prepareStatement(insertUserString);
+			String update = "UPDATE `userTable` SET `userPassword`= ? WHERE `userName` = ?";
+			updateUserPassword = conn.prepareStatement(update);
+			
 			String getAllUserString = "SELECT * FROM `userTable`";
 			getAllUser = conn.prepareStatement(getAllUserString);
 			String getValidUserString = "SELECT * FROM `userTable` WHERE `UserName` LIKE ?";
@@ -149,7 +153,7 @@ public class DbAccess
 			get = "SELECT idColor FROM  `colorTable` WHERE  `Color` =  ?";
 			getColorId = conn.prepareStatement(get);
 
-			String update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
+			update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
 			updateTiresOnStudsDate = conn.prepareStatement(update );
 			update = "UPDATE `vehicleTable` SET `nickName`= ? WHERE `idVehicle` = ?";
 			updateNickName = conn.prepareStatement(update );
@@ -641,6 +645,27 @@ public class DbAccess
 		} catch (SQLException e)
 		{
 			System.out.println("error on fetch of user password " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("User Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String updateUserPassword(String userName, String newPass)
+	{
+		String cleanUserName = sanitizeUserName(userName);
+		try
+		{
+			this.updateUserPassword.setString(1, newPass);
+			this.updateUserPassword.setString(2, cleanUserName);
+			
+			this.getUserPass.execute();
+
+		} catch (SQLException e)
+		{
+			System.out.println("error on update of user password " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("User Table: " + e.getErrorCode());

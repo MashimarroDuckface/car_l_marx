@@ -69,7 +69,8 @@ public class TabbedVehicleFrame extends JPanel
 	public JLabel lblNickName;
 	private JTextField txtTireType;
 	
-	private JDatePickerImpl datePicker;
+	private JDatePickerImpl datePickerOn;
+	private JDatePickerImpl datePickerOff;
 	private JLabel lblCarNickName;
 	private JTextField txtNickName;
 	private JLabel lblLicensePlate;
@@ -399,18 +400,19 @@ public class TabbedVehicleFrame extends JPanel
 			panelTires.add(lblTIreType);
 		}
 		{
-			txtTireType = new JTextField("Temp");
-			txtTireType.setBackground(new Color(255, 255, 240));
-			txtTireType.setEditable(false);
+			txtTireType = new JTextField();
+			txtTireType.setText(vTController.getTireType());
+			txtTireType.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					vTController.updateTIreType(txtTireType.getText());
+					
+				}
+			});
+			txtTireType.setBackground(Color.WHITE);
 			txtTireType.setBounds(22, 102, 134, 28);
 			panelTires.add(txtTireType);
 			txtTireType.setColumns(10);
-		}
-		{
-			JLabel lblStudsOn = new JLabel("Date Studs can be installed");
-			lblStudsOn.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-			lblStudsOn.setBounds(22, 147, 212, 16);
-			panelTires.add(lblStudsOn);
 		}
 		{  //  Calendar
 			/*  this stuff is for the new vehicle 
@@ -438,13 +440,13 @@ public class TabbedVehicleFrame extends JPanel
 			p.put("text.year", "Year");
 			
 			JDatePanelImpl studsOnDate = new JDatePanelImpl(model, p);
-			datePicker = new JDatePickerImpl(studsOnDate, new DateLabelFormatter());
-			datePicker.addActionListener(new ActionListener()
+			datePickerOn = new JDatePickerImpl(studsOnDate, new DateLabelFormatter());
+			datePickerOn.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					Date selectedDate = (Date) datePicker.getModel().getValue();
-					System.out.println("Selected Date " + selectedDate);
+					Date selectedDate = (Date) datePickerOn.getModel().getValue();
+					System.out.println("Selected Date ofn" + selectedDate);
 					java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
 					String currentDate = sdf.format(selectedDate);
@@ -453,8 +455,53 @@ public class TabbedVehicleFrame extends JPanel
 					vTController.updateStudsOnDate(currentDate);
 				}
 			});
-			datePicker.setBounds(22,175,160,30);
-			panelTires.add(datePicker);
+			datePickerOn.setBounds(22,175,200,30);
+			panelTires.add(datePickerOn);
+		}
+		{
+			JLabel lblStudsOn = new JLabel("Date Studs can be installed");
+			lblStudsOn.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+			lblStudsOn.setBounds(22, 147, 257, 16);
+			panelTires.add(lblStudsOn);
+		}
+		{
+			JLabel lblStudsOff = new JLabel("Date Studs need to be removed by");
+			lblStudsOff.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+			lblStudsOff.setBounds(22, 256, 257, 16);
+			panelTires.add(lblStudsOff);
+		}
+		{  
+			int month = vTController.getStudsOffMonth();
+			int day = vTController.getStudsOffDay();
+			int year = vTController.getStudsOffYear();
+			
+			UtilDateModel model = new UtilDateModel();
+			model.setDate(year, month, day);
+			model.setSelected(true);
+			
+			Properties p = new Properties();
+			p.put("text.today", "Today");
+			p.put("text.month", "Month");
+			p.put("text.year", "Year");
+			
+			JDatePanelImpl studsOffDate = new JDatePanelImpl(model, p);
+			datePickerOff = new JDatePickerImpl(studsOffDate, new DateLabelFormatter());
+			datePickerOff.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					Date selectedDate = (Date) datePickerOff.getModel().getValue();
+					System.out.println("Selected Date  on" + selectedDate);
+					java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+					
+					String currentDate = sdf.format(selectedDate);
+					System.out.println("Current Date " + currentDate);
+					
+					vTController.updateStudsOffDate(currentDate);
+				}
+			});
+			datePickerOff.setBounds(22,284,200,30);
+			panelTires.add(datePickerOff);
 		}
 
 		return panelTires;

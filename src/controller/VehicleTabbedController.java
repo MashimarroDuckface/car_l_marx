@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 import controller.LogonController.SubmitListener;
 import security.PasswordEncrypt;
@@ -167,6 +168,12 @@ public class VehicleTabbedController
 	{
 		dbHandle.updateTiresStudsOnDate(vehicleId, currentDate);
 	}
+	
+	public void updateStudsOffDate(String currentDate)
+	{
+		dbHandle.updateTiresStudsOffDate(vehicleId, currentDate);
+	}
+	
 	public int getStudsOnMonth()
 	{   //  Get month first - gets date from db
 		getStudsOnDate();
@@ -181,10 +188,40 @@ public class VehicleTabbedController
 	{
 		return Integer.parseInt(this.studsOnDate.substring(8, 10));
 	}
+	public int getStudsOffMonth()
+	{   //  Get month first - gets date from db
+		getStudsOffDate();
+		
+		return Integer.parseInt(this.studsOffDate.substring(5, 7))-1;      //  Months are 0 based
+	}
+	public int getStudsOffYear()
+	{
+		return Integer.parseInt(this.studsOffDate.substring(0, 4));
+	}
+	public int getStudsOffDay()
+	{
+		return Integer.parseInt(this.studsOffDate.substring(8, 10));
+	}
 	
 	private void getStudsOnDate()
 	{
 		this.studsOnDate = dbHandle.getStudsOnDate(vehicleId);
+	}
+	
+	private void getStudsOffDate()
+	{
+		this.studsOffDate = dbHandle.getStudsOffDate(vehicleId);
+	}
+	
+	public String getTireType()
+	{
+		return dbHandle.getTireType(vehicleId);
+	}
+	
+	public void updateTIreType(String tireType)
+	{
+		dbHandle.updateTireType(vehicleId, tireType);
+		
 	}
 	
 /*  This listener isn't working.  I don't know why at this time  - Lise Nov 11, 2014 */	

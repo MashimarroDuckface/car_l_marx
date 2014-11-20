@@ -51,13 +51,16 @@ public class DbAccess
 	private PreparedStatement getMileage;
 	private PreparedStatement getNickName;
 	private PreparedStatement updateTiresOnStudsDate;
+	private PreparedStatement updateTiresOffStudsDate;
 	private PreparedStatement updateNickName;
 	private PreparedStatement updateColor;
 	private PreparedStatement updateLicensePlate;
 	private PreparedStatement getLicensePlate;
 	private PreparedStatement getStudsOnDate;
+	private PreparedStatement getStudsOffDate;
+	private PreparedStatement getTireType;
+	private PreparedStatement updateTireType;
 	
-
 	/**
 	 * Note that the constructor is listed as private. That will disallow the
 	 * instantiation of objects without going through the singleton pattern
@@ -155,6 +158,10 @@ public class DbAccess
 
 			update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
 			updateTiresOnStudsDate = conn.prepareStatement(update );
+			update = "UPDATE `tireTable` SET `offStudsDate`= ? WHERE idVehicle = ?";
+			updateTiresOffStudsDate = conn.prepareStatement(update );
+			update = "UPDATE `tireTable` SET `tireType`= ? WHERE `idVehicle` = ?";
+			updateTireType = conn.prepareStatement(update );
 			update = "UPDATE `vehicleTable` SET `nickName`= ? WHERE `idVehicle` = ?";
 			updateNickName = conn.prepareStatement(update );
 			update = "UPDATE `vehicleTable` SET `licensePlate`= ? WHERE `idVehicle` = ?";
@@ -164,6 +171,10 @@ public class DbAccess
 			
 			get = "SELECT `onStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
 			getStudsOnDate = conn.prepareStatement(get );
+			get = "SELECT `offStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
+			getStudsOffDate = conn.prepareStatement(get );
+			get = "SELECT `tireType` FROM `tireTable` WHERE `idVehicle` = ?";
+			getTireType = conn.prepareStatement(get );
 			get = "SELECT  `Color` FROM `colorTable` ORDER BY Color";
 			getColor = conn.prepareStatement(get );
 			get = "SELECT  `Color` FROM `colorTable`  INNER JOIN vehicleTable ON colorTable.idColor = vehicleTable.idColor  WHERE vehicleTable.idVehicle = ?";
@@ -544,7 +555,41 @@ public class DbAccess
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void updateTiresStudsOffDate(int vehicleId, String currentDate)
+	{
+		try
+		{
+			this.updateTiresOffStudsDate.setString(1, currentDate);
+			this.updateTiresOffStudsDate.setInt(2, vehicleId);
+			this.updateTiresOffStudsDate.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of update studs off date" + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateTireType(int vehicleId, String tireType)
+	{
+		try
+		{
+			this.updateTireType.setString(1, tireType);
+			this.updateTireType.setInt(2, vehicleId);
+			this.updateTireType.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of update tire type " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+	
 	public int getMileage(int vehicleId)
 	{
 		int cleanVehicleId = sanitizeNum(vehicleId);
@@ -682,13 +727,53 @@ public class DbAccess
 			ResultSet resultSet = this.getStudsOnDate.executeQuery();
 			while (resultSet.next())
 			{
-				// System.out.println ("inside DbAccess - getPass " +
-				// resultSet.getString("userPassword"));
 				return resultSet.getString("onStudsDate");
 			}
 		} catch (SQLException e)
 		{
 			System.out.println("error on fetch of studs on date " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getStudsOffDate(int vehicleId)
+	{
+		try
+		{
+			this.getStudsOffDate.setInt(1, vehicleId);
+			ResultSet resultSet = this.getStudsOffDate.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("offStudsDate");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of studs off date " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String getTireType(int vehicleId)
+	{
+		try
+		{
+			this.getTireType.setInt(1, vehicleId);
+			ResultSet resultSet = this.getTireType.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getString("tireType");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of  tire type " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("Tire Table: " + e.getErrorCode());
@@ -844,6 +929,5 @@ public class DbAccess
 		// TODO actually sanitize the number
 		return num;
 	}
-
 
 }

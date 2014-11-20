@@ -62,9 +62,9 @@ public class ResetController
 				userView.lblUserName.setForeground(Color.RED);
 				return;
 			} 
-			else if (dbHandle.validUser(userName))
+			else if (!dbHandle.validUser(userName))
 			{
-				userView.lblUserName.setText("User Name is not available");
+				userView.lblUserName.setText("User Name Unknown");
 				userView.lblUserName.setForeground(Color.RED);
 				return;
 			}
@@ -93,21 +93,16 @@ public class ResetController
 				userView.lblReNewPass.setForeground(Color.RED);
 				return;
 			}
-			//TODO Check if email adresses match
-			//TODO SQL side stuff: temp PW, email user
 			
 			//  Passed all tests - get a password salt, encrypt the password, and insert the user
 			PasswordEncrypt pass = new PasswordEncrypt();
-			String salt = null;
-			try {
-			salt = pass.getSalt();
-			} catch (Exception a)
-			{
-				
-			}
+			String salt = dbHandle.getSalt(userName);
+			
 			String encPassword = pass.getSecurePassword(new String(newPass), salt);
-
-	//		dbHandle.insertReset(userName, encPassword, salt, firstName, lastName, emailAdd);
+			//TODO check if old pass is users actual pass
+			//SECURITY CONCERN
+			
+			dbHandle.updateUserPassword(userName,encPassword);
 			
 			userView.setVisible(false); //you can't see me!
 			userView.dispose(); //Destroy the JFrame object

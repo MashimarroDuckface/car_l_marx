@@ -50,6 +50,9 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import javax.swing.JScrollBar;
+import javax.swing.JTextArea;
+
 public class TabbedVehicleFrame extends JPanel
 {
 
@@ -57,9 +60,10 @@ public class TabbedVehicleFrame extends JPanel
 	private JPanel panelEdit;
 	private JPanel panelMaint;
 	private JPanel panelTires;
+	private JTextArea textSummary;
 	private VehicleTabbedController vTController;
-	public JComboBox cbxMake;
-	public JComboBox cbxModel;
+	public JComboBox <String>cbxMake;
+	public JComboBox<String> cbxModel;
 	private ArrayList<ModelObject> modelList;
 	public JTextField txtCurrentMileage;
 	public JTextField txtMileage;
@@ -150,11 +154,27 @@ public class TabbedVehicleFrame extends JPanel
 			panelSummary.add(lblSummary);
 		}
 		{
+			String someText = " some summary stuff";
+			textSummary=new JTextArea(someText, 5, 10);
+			textSummary.setSize(285, 86);
+			textSummary.setLocation(21, 84);
+			textSummary.setPreferredSize(new Dimension(100, 100));
+			panelSummary.add(textSummary);
+		}
+		{
 			JLabel lblToDo = new JLabel("To-Do List");
 			lblToDo.setBounds(21, 182, 225, 19);
 			lblToDo.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 			lblToDo.setBackground(new Color(255, 255, 240));
 			panelSummary.add(lblToDo);
+		}
+		{
+			String someText = "Time to schedule an oil change   \n\nWinter studs are now legal";
+			JTextArea txtToDo = new JTextArea(someText, 5, 10);
+			txtToDo.setSize(285, 86);
+			txtToDo.setLocation(21, 213);
+			txtToDo.setPreferredSize(new Dimension(100, 100));
+			panelSummary.add(txtToDo);
 		}
 		{
 			JLabel lblOptional = new JLabel("Optional Information");

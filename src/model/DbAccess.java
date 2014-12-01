@@ -30,6 +30,9 @@ public class DbAccess
 
 	// Prepared statements
 	private PreparedStatement insertUser;
+	private PreparedStatement insertNewVehicle;
+	private PreparedStatement insertNewTire;
+	private PreparedStatement getVehicleId;
 	private PreparedStatement updateUserPassword;
 	private PreparedStatement getAllUser;
 	private PreparedStatement getValidUser;
@@ -111,8 +114,13 @@ public class DbAccess
 		try
 		{
 			// User statements
-			String insertUserString = "INSERT INTO `car_l_marx`.`userTable` (`userName`, `userPassword`, `passSalt`, `fName`, `lname`, `userEmail`) VALUES (?, ?, ?, ?, ?, ?)";
-			insertUser = conn.prepareStatement(insertUserString);
+			String insert = "INSERT INTO `car_l_marx`.`userTable` (`userName`, `userPassword`, `passSalt`, `fName`, `lname`, `userEmail`) VALUES (?, ?, ?, ?, ?, ?)";
+			insertUser = conn.prepareStatement(insert);
+			insert = "INSERT INTO `car_l_marx`.`vehicleTable` (`idVehicle`, `userName`, `idmake`, `idModel`, `nickName`, `idColor`, `licensePlate`, `mileage`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+			insertNewVehicle = conn.prepareStatement(insert);
+			insert = "INSERT INTO `car_l_marx`.`tireTable` (`idVehicle`, `offStudsDate`, `onStudsDate`, `tireType`) VALUES (?, ?, ?, ?)";
+			insertNewTire = conn.prepareStatement(insert);
+			
 			String update = "UPDATE `userTable` SET `userPassword`= ? WHERE `userName` = ?";
 			updateUserPassword = conn.prepareStatement(update);
 			
@@ -151,6 +159,8 @@ public class DbAccess
 			
 			String get = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
 			getNickName = conn.prepareStatement(get );
+			get = "SELECT `idVehicle` FROM `vehicleTable` WHERE `userName` = ? AND `licensePlate` = ?";
+			getVehicleId = conn.prepareStatement(get );
 			get = "SELECT  `licensePlate` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
 			getLicensePlate = conn.prepareStatement(get );
 			get = "SELECT idColor FROM  `colorTable` WHERE  `Color` =  ?";
@@ -447,6 +457,28 @@ public class DbAccess
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("Model Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return -999;
+	}
+	
+	public int getVehicleId(String userName, String licensePlate)
+	{
+		try
+		{
+			this.getVehicleId.setString(1, userName);
+			this.getVehicleId.setString(2, licensePlate);
+			ResultSet resultSet = this.getVehicleId.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getInt("idVehicle");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get vehicle id from vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Vehicle Table: " + e.getErrorCode());
 			e.printStackTrace();
 		}
 		return -999;
@@ -878,7 +910,53 @@ public class DbAccess
 		}
 		return null;
 	}
+	
+	public void insertNewVehicle(String userName, String nickName, int makeId,
+			int modelId, int colorId, String licensePlate, int mileage)
+	{
+		// TODO clean the in bound data before putting it into the database
+		try
+		{
+			this.insertNewVehicle.setString(1, userName);
+			this.insertNewVehicle.setInt(2, makeId);
+			this.insertNewVehicle.setInt(3, modelId);
+			this.insertNewVehicle.setString(4, nickName);
+			this.insertNewVehicle.setInt(5, colorId);
+			this.insertNewVehicle.setString(6, licensePlate);
+			this.insertNewVehicle.setInt(7, mileage);
+			insertNewVehicle.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on insert of new vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("new vehicle error: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
 
+	public void insertNewTire(int vehicleId, String studsOnDate,
+			String studsOffDate, String tireType)
+	{
+		// TODO clean the in bound data before putting it into the database
+		try
+		{
+			this.insertNewTire.setInt(1, vehicleId);
+			this.insertNewTire.setString(2, studsOnDate);
+			this.insertNewTire.setString(3, studsOffDate);
+			this.insertNewTire.setString(4, tireType);
+			insertNewTire.execute();
+		} catch (SQLException e)
+		{
+			System.out.println("error on insert of new tire " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("new tire error: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void insertNewUser(String userName, String password, String salt,
 			String firstName, String lastName, String email)
 	{

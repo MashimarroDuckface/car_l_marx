@@ -42,7 +42,14 @@ public class MainController
 	public void vehicleTabbedFrame(String userName)
 	{
 		//  TODO  get vehicleId from table
+		System.out.println("MainController - vehicleTabbedFrame");
 		int vehicleId = 1;
 		VehicleTabbedStart vController = new VehicleTabbedStart(this, userName, vehicleId);
+	}
+	
+	public void newVehicleFrame (String userName)
+	{
+		System.out.println("MainController - newVehicleFrame");
+		NewVehicleStart vehicle = new NewVehicleStart(this, userName);
 	}
 }

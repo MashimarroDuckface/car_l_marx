@@ -29,6 +29,8 @@ public class VehicleStart
 	private DbAccess DbHandle;
 	private VehicleController vehicleController;
 	private MainController mController;
+	public VehicleTablePanel newContentPane;
+	public JFrame frame;
 	ArrayList<VehiclesObject> vlist;
 
 	public VehicleStart(MainController mController, String user)
@@ -49,15 +51,17 @@ public class VehicleStart
 	void createAndShowGUI(ArrayList<VehiclesObject> vlist)
 	{
 		// Create and set up the window.
-		JFrame frame = new JFrame("Car-L-Marx");
+		frame = new JFrame("Car-L-Marx");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create and set up the content pane.
-		VehicleTablePanel newContentPane = new VehicleTablePanel(vlist);
+		newContentPane = new VehicleTablePanel(vlist);
+		newContentPane.setBounds(50, 50, 500, 500);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
 		newContentPane.addSubmitButtonListener(new SubmitListener());
+		newContentPane.newVehicleButtonListener(new NewVehicleListener());
 
 		// Display the window.
 		frame.pack();
@@ -69,7 +73,20 @@ public class VehicleStart
 		public void actionPerformed(ActionEvent e)
 		{
 			System.out.println("Vehicle Start -- SubmitListener");
+			frame.setVisible(false); //you can't see me!
+			frame.dispose(); //Destroy the JFrame object
 			mController.vehicleTabbedFrame(user);
+		}
+	}
+	
+	public class NewVehicleListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println("Vehicle Start -- New Vehicle Listener");
+			frame.setVisible(false); //you can't see me!
+			frame.dispose(); //Destroy the JFrame object
+			mController.newVehicleFrame(user);
 		}
 	}
 }

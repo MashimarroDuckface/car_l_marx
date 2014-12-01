@@ -28,7 +28,7 @@ public class dbTest
 	     assertEquals(salt, "[C@6f347124");
 	   }
 	   
-	   @Test(timeout=500)
+	   @Test(timeout=300)
 	   public void testGetSaltTime() {	
 		     dbHandle = DbAccess.getInstance();
 		     String salt = dbHandle.getSalt("Lacemaker");

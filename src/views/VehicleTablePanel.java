@@ -37,11 +37,11 @@ public class VehicleTablePanel extends JPanel {
     		data.add(new Object[]{v.idvehicle, v.make, v.model, v.color, v.licensePlate, v.mileage});
     	}
     	
-        String[] columnNames = {"Color",
-                                "License Plate",
-                                "Vehicle ID",
+        String[] columnNames = {"Vehicle ID",
                                 "Make",
                                 "Model",
+                                "Color",
+                                "License Plate",
                                 "Mileage"};
         
 

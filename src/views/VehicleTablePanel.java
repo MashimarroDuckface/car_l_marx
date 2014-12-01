@@ -31,48 +31,30 @@ public class VehicleTablePanel extends JPanel {
 //    Object[][] data;
 
     public VehicleTablePanel(ArrayList <VehiclesObject> vlist) {
-    	setBackground(new Color(255, 255, 240));
-    	this.setBounds(50, 50, 562, 260);
-        
-    //    Object[][] data = null;
-     
+    	ArrayList<Object[]> data = new ArrayList<Object[]>();
+    	int i=0;
+    	for(VehiclesObject v:vlist){
+    		data.add(new Object[]{v.idvehicle, v.make, v.model, v.color, v.licensePlate, v.mileage});
+    	}
+    	
         String[] columnNames = {"Color",
                                 "License Plate",
                                 "Vehicle ID",
                                 "Make",
                                 "Model",
                                 "Mileage"};
+        
 
-//        vehiclelist = vlist;
-//        System.out.println(vehiclelist);
-//		int i=0;
-//		for (VehiclesObject v:vehiclelist)
-//		{
-//			data[i][0]=v.color;
-//			data[i][1]=v.licensePlate;
-//			data[i][2]=v.idvehicle;
-//			data[i][3]=v.make;
-//			data[i][4]=v.model;
-//			data[i][5]=v.mileage;
-//			i++;
-//			System.out.println(v.color + v.licensePlate + v.idvehicle + v.make + v.model + v.mileage);
-//		}
-		
-		Object[][] data = {{"Blue", "MMR 234", "3", "GM", "Truck", "45602"},
-				{"White", "SWV 123", "1", "Toyota", "Camry", "43100"},
-				{"Red", "FTT 123", "2", "Toyota", "Corolla", "34500"},
-				{"Black", "TR9472", "4", "Tesla", "S", "25300"}
-		};
-		
+        
+        JTable table = new JTable(new VehicleTableModel(data, columnNames));
 
-        final JTable table = new JTable(data, columnNames);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+	
+        table.setPreferredScrollableViewportSize(new Dimension(500, 500));
         table.setFillsViewportHeight(true);
 
         if (DEBUG) {
             table.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    printDebugData(table);
                 }
             });
         }

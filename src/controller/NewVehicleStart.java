@@ -126,5 +126,11 @@ public class NewVehicleStart
 		
 		//  TODO close new vehicle window, reopen table window
 		
+		frame.setVisible(false); //you can't see me!
+		frame.dispose(); //Destroy the JFrame object
+//		mController.vehicleTabbedFrame(user);
+		mController.goodUser(userName);
+		
+		
 	}
 }

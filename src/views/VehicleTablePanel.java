@@ -1,7 +1,6 @@
 package views;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -10,17 +9,12 @@ import controller.VehicleController;
 import model.VehiclesObject;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import java.awt.Component;
-import java.awt.Color;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.BorderLayout;
 
 public class VehicleTablePanel extends JPanel {
     private boolean DEBUG = false;

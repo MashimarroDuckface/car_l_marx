@@ -13,19 +13,14 @@
 */
 package controller;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
-import controller.LogonController.SubmitListener;
-import security.PasswordEncrypt;
 import views.*;
 import model.DbAccess;
 import model.MakeObject;

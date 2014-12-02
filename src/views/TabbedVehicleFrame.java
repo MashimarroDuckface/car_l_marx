@@ -44,13 +44,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.SwingConstants;
-import javax.swing.JTree;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
-import javax.swing.JScrollBar;
 import javax.swing.JTextArea;
 
 public class TabbedVehicleFrame extends JPanel

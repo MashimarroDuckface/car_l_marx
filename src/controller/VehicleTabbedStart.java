@@ -26,6 +26,7 @@ public class VehicleTabbedStart
 	private VehicleTabbedController vController;
 	private MainController mController;
 	private int vehicleId;
+	private JFrame frame;
 	
 	public VehicleTabbedStart(MainController mController, String userName, int vehicleId)
 	{	
@@ -33,7 +34,7 @@ public class VehicleTabbedStart
 		this.vehicleId = vehicleId;
 		DbHandle = DbAccess.getInstance();
 		this.mController = mController;
-		vController = new VehicleTabbedController(DbHandle, mController, this.vehicleId);
+		vController = new VehicleTabbedController(this, DbHandle, mController, this.vehicleId);
 		vehicleTabView = new TabbedVehicleFrame(vController);
 	
 		vController.startTabbedView();
@@ -43,7 +44,7 @@ public class VehicleTabbedStart
 	private void createAndShowGUI()
 	{
 	    //Create and set up the window.
-	    JFrame frame = new JFrame("Car-L-Marx");
+	    frame = new JFrame("Car-L-Marx");
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	    //Create and set up the content pane.
@@ -54,5 +55,12 @@ public class VehicleTabbedStart
 	    //Display the window.
 	    frame.pack();
 	    frame.setVisible(true);
+	}
+	
+	public void returnToTable()
+	{
+		frame.setVisible(false); //you can't see me!
+		frame.dispose(); //Destroy the JFrame object
+		this.mController.goodUser(userName);
 	}
 }

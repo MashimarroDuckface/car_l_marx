@@ -31,17 +31,19 @@ public class VehicleTabbedController
 	private TabbedVehicleFrame tabView;
 	private DbAccess dbHandle;
 	private MainController mController;
+	private VehicleTabbedStart vStartController;
 	private VehicleTabbedController vTController;
 	public String make;
 	public int vehicleId;
 	private String studsOnDate;
 	private String studsOffDate;
 	
-	public VehicleTabbedController( DbAccess dbHandle, MainController mController, int vehicleId)
+	public VehicleTabbedController( VehicleTabbedStart vStartController, DbAccess dbHandle, MainController mController, int vehicleId)
 	{
 //		this.tabView = tabFrame;
 		this.dbHandle = dbHandle;
 		this.mController = mController;
+		this.vStartController = vStartController;
 		this.vTController = this;
 		this.vehicleId = vehicleId;
 	//	this.tabView.setController(this);
@@ -218,6 +220,12 @@ public class VehicleTabbedController
 		dbHandle.updateTireType(vehicleId, tireType);
 		
 	}
+
+	public void returnToTable()
+	{
+		this.vStartController.returnToTable();
+	}
+	
 	
 /*  This listener isn't working.  I don't know why at this time  - Lise Nov 11, 2014 */	
 	public class CbxMakeListener implements ActionListener 

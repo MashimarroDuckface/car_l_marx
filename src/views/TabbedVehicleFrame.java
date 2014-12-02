@@ -50,6 +50,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.JTextArea;
+import javax.swing.JButton;
 
 public class TabbedVehicleFrame extends JPanel
 {
@@ -77,11 +78,12 @@ public class TabbedVehicleFrame extends JPanel
 	private JTextField txtNickName;
 	private JLabel lblLicensePlate;
 	private JTextField txtLicensePlate;
+	private final JButton btnReturn = new JButton("Return to Vehicle List");
 
 	/**
 	 * Create the panel.
 	 */
-	public TabbedVehicleFrame(VehicleTabbedController vTController)
+	public TabbedVehicleFrame(final VehicleTabbedController vTController)
 	// public TabbedVehicleFrame()
 	{
 		this.vTController = vTController;
@@ -96,6 +98,13 @@ public class TabbedVehicleFrame extends JPanel
 				"Summary",
 				new ImageIcon(TabbedVehicleFrame.class
 						.getResource("/images/car.png")), panel1, "");
+		btnReturn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				vTController.returnToTable();
+			}
+		});
+		btnReturn.setBounds(21, 450, 189, 29);
+		panelSummary.add(btnReturn);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
 		JComponent panel2 = makeTextPanelEditCar("Panel #2");

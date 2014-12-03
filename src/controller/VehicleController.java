@@ -36,7 +36,7 @@ public class VehicleController
 	public ArrayList<VehiclesObject> startVehicle()
 	{
 //		this.vehicleView.addSubmitButtonListener(new SubmitListener());
-		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle(userName);
+		ArrayList<VehiclesObject> vehicleList = dbHandle.getUserVehicle("Lacemaker");
 		//  This is how you can read the data back from the array list
 		for (VehiclesObject v:vehicleList)
 		{

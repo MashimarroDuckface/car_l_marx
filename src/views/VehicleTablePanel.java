@@ -46,12 +46,20 @@ public class VehicleTablePanel extends JPanel {
         table.setPreferredScrollableViewportSize(new Dimension(500, 500));
         table.setFillsViewportHeight(true);
 
-        if (DEBUG) {
-            table.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
+        table.addMouseListener(new MouseAdapter() {
+        	public void mouseClicked(MouseEvent e) {
+        		if (e.getClickCount() == 2)
+                {
+                  final JTable target = (JTable)e.getSource();
+                  final int row = target.getSelectedRow();
+                  final int column = 0;
+
+                  final int value = (Integer) target.getValueAt(row, column);
+                  System.out.println(value);
                 }
-            });
-        }
+            }
+        });
+        
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);

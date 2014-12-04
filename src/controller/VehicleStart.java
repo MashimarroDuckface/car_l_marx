@@ -60,7 +60,6 @@ public class VehicleStart
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
-		newContentPane.addSubmitButtonListener(new SubmitListener());
 		newContentPane.newVehicleButtonListener(new NewVehicleListener());
 
 		// Display the window.

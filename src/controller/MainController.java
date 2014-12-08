@@ -39,11 +39,11 @@ public class MainController
 //		vehicleTabbedFrame(userName);
 	}
 	
-	public void vehicleTabbedFrame(String userName)
+	public void vehicleTabbedFrame(String userName, int vehicleId)
 	{
 		//  TODO  get vehicleId from table
-		System.out.println("MainController - vehicleTabbedFrame");
-		int vehicleId = 1;
+//		System.out.println("MainController - vehicleTabbedFrame");
+//		int vehicleId = 1;
 		VehicleTabbedStart vController = new VehicleTabbedStart(this, userName, vehicleId);
 	}
 	

@@ -55,7 +55,7 @@ public class VehicleStart
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create and set up the content pane.
-		newContentPane = new VehicleTablePanel(vlist);
+		newContentPane = new VehicleTablePanel(this, vlist);
 		newContentPane.setBounds(50, 50, 500, 500);
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
@@ -66,6 +66,13 @@ public class VehicleStart
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	public void tabbedView(int vehicleId)
+	{
+		frame.setVisible(false); //you can't see me!
+		frame.dispose(); //Destroy the JFrame object
+		mController.vehicleTabbedFrame(this.user, vehicleId);
+	}
 
 	public class SubmitListener implements ActionListener
 	{
@@ -74,7 +81,7 @@ public class VehicleStart
 			System.out.println("Vehicle Start -- SubmitListener");
 			frame.setVisible(false); //you can't see me!
 			frame.dispose(); //Destroy the JFrame object
-			mController.vehicleTabbedFrame(user);
+	//		mController.vehicleTabbedFrame(user, newContentPane.vehicleId);
 		}
 	}
 	

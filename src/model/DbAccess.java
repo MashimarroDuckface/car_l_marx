@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import model.VehiclesObject;
+
 public class DbAccess
 {
 	private Connection conn;
@@ -39,6 +41,7 @@ public class DbAccess
 	private PreparedStatement getUserSalt;
 	private PreparedStatement getUserPass;
 	private PreparedStatement getUserVehicles;
+	private PreparedStatement getVehicle;
 	private PreparedStatement updateMakeAndModel;
 	private PreparedStatement getMake;
 	private PreparedStatement getColor;
@@ -165,6 +168,8 @@ public class DbAccess
 			getLicensePlate = conn.prepareStatement(get );
 			get = "SELECT idColor FROM  `colorTable` WHERE  `Color` =  ?";
 			getColorId = conn.prepareStatement(get);
+			get = "SELECT * FROM `vehicleTable` WHERE `idVehicle` =  ?";
+			getVehicle = conn.prepareStatement(get);
 
 			update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
 			updateTiresOnStudsDate = conn.prepareStatement(update );
@@ -343,7 +348,7 @@ public class DbAccess
 			ResultSet resultSet = this.getMakeId.executeQuery();
 			while (resultSet.next())
 			{
-				System.out.println("DbAccess - getMakeId " + resultSet.getInt("idMake"));
+//				System.out.println("DbAccess - getMakeId " + resultSet.getInt("idMake"));
 				return resultSet.getInt("idMake");
 			}
 		} catch (SQLException e)
@@ -460,6 +465,39 @@ public class DbAccess
 			e.printStackTrace();
 		}
 		return -999;
+	}
+	
+	public Vehicle getVehicleData(int vehicleId)
+	{
+		try
+		{
+			this.getVehicle.setInt(1, vehicleId);
+			ResultSet resultSet = this.getVehicle.executeQuery();
+			while (resultSet.next())
+			{
+				Vehicle vehicle = new Vehicle();
+				vehicle.idVehicle =  resultSet.getInt("idVehicle");
+				vehicle.userName =  resultSet.getString("userName");
+				vehicle.idMake = resultSet.getInt("idmake");
+				vehicle.idModel = resultSet.getInt("idModel");
+				vehicle.nickName = resultSet.getString("nickName");
+				vehicle.idColor = resultSet.getInt("idColor");
+				vehicle.licenstPlate = resultSet.getString("licensePlate");
+				vehicle.mileage = resultSet.getInt("mileage");
+				vehicle.modle = this.getModelString(vehicleId);
+				vehicle.make = this.getMakeForVehicle(vehicleId);
+				vehicle.color = this.getColorString(vehicleId);
+				return vehicle;
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get vehicle data from vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Vehicle Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public int getVehicleId(String userName, String licensePlate)

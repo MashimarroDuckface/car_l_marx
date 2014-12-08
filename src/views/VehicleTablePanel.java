@@ -6,6 +6,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controller.VehicleController;
+import controller.VehicleStart;
 import model.VehiclesObject;
 
 import java.awt.Dimension;
@@ -13,16 +14,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
 import javax.swing.BoxLayout;
+
 import java.awt.Component;
 
 public class VehicleTablePanel extends JPanel {
 	private boolean DEBUG = false;
 	public JButton btnNewVehicle;
+	private VehicleStart vStartController;
 	ArrayList<VehiclesObject> vehiclelist;
 	VehicleController vController;
 
-	public VehicleTablePanel(ArrayList<VehiclesObject> vlist) {
+	public VehicleTablePanel(final VehicleStart vStartController, ArrayList<VehiclesObject> vlist) {
+		this.vStartController = vStartController;
 		ArrayList<Object[]> data = new ArrayList<Object[]>();
 		int i = 0;
 		for (VehiclesObject v : vlist) {
@@ -50,6 +55,7 @@ public class VehicleTablePanel extends JPanel {
 						final int value = (Integer) target.getValueAt(row,
 								column);
 						System.out.println(value);
+						vStartController.tabbedView( value);
 					} catch (Exception exception) {
 						System.out.println("Area outside table.");
 					}

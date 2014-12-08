@@ -25,6 +25,7 @@ import views.*;
 import model.DbAccess;
 import model.MakeObject;
 import model.ModelObject;
+import model.Vehicle;
 
 public class VehicleTabbedController
 {
@@ -38,6 +39,10 @@ public class VehicleTabbedController
 	private String studsOnDate;
 	private String studsOffDate;
 	
+	public Vehicle vehicle;
+	
+	public int makeId;
+	
 	public VehicleTabbedController( VehicleTabbedStart vStartController, DbAccess dbHandle, MainController mController, int vehicleId)
 	{
 //		this.tabView = tabFrame;
@@ -46,6 +51,7 @@ public class VehicleTabbedController
 		this.vStartController = vStartController;
 		this.vTController = this;
 		this.vehicleId = vehicleId;
+		vehicle = dbHandle.getVehicleData(vehicleId);
 	//	this.tabView.setController(this);
 	}
 	
@@ -82,12 +88,14 @@ public class VehicleTabbedController
 	
 	public int getCurrentMileage()
 	{
-		return dbHandle.getMileage(this.vehicleId);
+		return vehicle.mileage;
+	//	return dbHandle.getMileage(this.vehicleId);
 	}
 	
 	public String getCurrentMileageString()
 	{
-		return Integer.toString(dbHandle.getMileage(this.vehicleId));
+		return Integer.toString(vehicle.mileage);
+//		return Integer.toString(dbHandle.getMileage(this.vehicleId));
 	}
 	
 	public void updateMakeAndModel(String model, String make)
@@ -108,17 +116,20 @@ public class VehicleTabbedController
 	
 	public String getMakeString()
 	{
-		return this.dbHandle.getMakeForVehicle(this.vehicleId);
+		return vehicle.make;
+//		return this.dbHandle.getMakeForVehicle(this.vehicleId);
 	}
 	
 	public int getMakeId()
 	{
-		return this.dbHandle.getMakeIdForVehicle(this.vehicleId);
+		return vehicle.idMake;
+	//	return this.dbHandle.getMakeIdForVehicle(this.vehicleId);
 	}
 	
 	public String getModelString()
 	{
-		return this.dbHandle.getModelString(vehicleId);
+		return vehicle.modle;
+	//	return this.dbHandle.getModelString(vehicleId);
 	}
 	
 	public ArrayList<ModelObject> getModel(String make)
@@ -130,7 +141,8 @@ public class VehicleTabbedController
 	
 	public String getNickName()
 	{
-		return this.dbHandle.getNickName(this.vehicleId);
+		return vehicle.nickName;
+//		return this.dbHandle.getNickName(this.vehicleId);
 	}
 	
 	public void updateLicensePlate(String licensePlate)
@@ -142,11 +154,14 @@ public class VehicleTabbedController
 	{
 		int idColor = dbHandle.getColorId(color);
 		dbHandle.updateColor(this.vehicleId, idColor);
+		vehicle.idColor = idColor;
+		vehicle.color = color;
 	}
 	
 	public String getLicensePlate()
 	{
-		return dbHandle.getLicensePlate(this.vehicleId);
+		return vehicle.licenstPlate;
+//		return dbHandle.getLicensePlate(this.vehicleId);
 	}
 	
 	public ArrayList<String> getColor()
@@ -158,7 +173,8 @@ public class VehicleTabbedController
 	
 	public String getColorString()
 	{
-		return dbHandle.getColorString(vehicleId);
+		return vehicle.color;
+//		return dbHandle.getColorString(vehicleId);
 	}
 	
 	public void updateStudsOnDate(String currentDate)

@@ -232,14 +232,7 @@ public class TabbedVehicleFrame extends JPanel
 				{
 					JComboBox cb = (JComboBox) e.getSource();
 					String selectedMake = (String) cb.getSelectedItem();
-					modelList = vTController.getModel(selectedMake); // get
-																		// models
-																		// based
-																		// on
-																		// the
-																		// make
-																		// selected
-
+					modelList = vTController.getModel(selectedMake); // get models based on the make selected
 					model = (DefaultComboBoxModel) cbxModel.getModel();
 					model.removeAllElements();
 					model.addElement("-select model");
@@ -271,7 +264,7 @@ public class TabbedVehicleFrame extends JPanel
 							.toString(), cbxMake.getSelectedItem().toString());
 				}
 			});
-			cbxModel.setBounds(6, 108, 170, 27);
+			cbxModel.setBounds(36, 108, 170, 27);
 			/* Model stuff */
 			modelList = vTController.getModel(vTController.getMakeString()); // model
 																				// list

@@ -45,7 +45,7 @@ public class NewVehicleStart
 		DbHandle = DbAccess.getInstance();
 		
 		newVehicleView = new NewVehicleFrame();
-		vController = new NewVehicleController(this, DbHandle, mController);
+		vController = new NewVehicleController(this, newVehicleView, DbHandle, mController);
 	
 //		vController.startNewVehicleView();
 		createAndShowGUI();

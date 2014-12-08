@@ -52,6 +52,7 @@ public class NewVehiclePanel extends JPanel
 	public NewVehiclePanel(final NewVehicleController vController)
 	{
 		this.vController = vController;
+		vController.setController(this);
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBackground(new Color(255, 255, 240));
 		setLayout(null);

@@ -20,18 +20,20 @@ import model.DbAccess;
 import model.MakeObject;
 import model.ModelObject;
 import views.NewVehicleFrame;
+import views.NewVehiclePanel;
 
 public class NewVehicleController
 {
 	private DbAccess dbHandle;
 	private NewVehicleFrame newVehicleView;
+	private NewVehiclePanel newVehiclePanel;
 	private String userName;
 	private MainController mController;
 	private NewVehicleStart newVController;
 	
-	public NewVehicleController(NewVehicleStart newVController, DbAccess dbHandle, MainController mController)
+	public NewVehicleController(NewVehicleStart newVController, NewVehicleFrame newVehicleView, DbAccess dbHandle, MainController mController)
 	{
-//		this.newVehicleView = vehicleView;
+		this.newVehicleView = newVehicleView;
 		this.dbHandle = dbHandle;
 		this.userName = userName;
 		this.mController = mController;
@@ -72,26 +74,35 @@ public class NewVehicleController
 
 	public void next()
 	{
+		String NickName = newVehiclePanel.txtNickName.getText();
+		System.out.println("NewVehicleController - next --> nickName " + NickName );
 		//test nickname
-		if (Pattern.matches("[a-zA-Z0-9]+", newContentPane.txtNickName.getText()) == false || newContentPane.txtNickName.getText().length() == 0){
-			
-		}
-		
-		//test licenceplate
-		if (Pattern.matches("[a-zA-Z0-9]+", licensePlate) == false || licensePlate.length() < 5|| licensePlate.length() > 7){
-			
-		}
-		
-		//test milage
-		if (Pattern.matches("[0-9]+", mileage) == false){
-			
-		}		
+	//	if (Pattern.matches("[a-zA-Z0-9]+", newContentPane.txtNickName.getText()) == false || newContentPane.txtNickName.getText().length() == 0){
+//			
+//		}
+//		
+//		//test licenceplate
+//		if (Pattern.matches("[a-zA-Z0-9]+", licensePlate) == false || licensePlate.length() < 5|| licensePlate.length() > 7){
+//			
+//		}
+//		
+//		//test milage
+//		if (Pattern.matches("[0-9]+", mileage) == false){
+//			
+//		}		
 		this.newVController.nextTires();
 	}
 
 	public void submit()
 	{
 		this.newVController.submit();
+	}
+
+	public void setController(NewVehiclePanel newVehiclePanel)
+	{
+		this.newVehiclePanel = newVehiclePanel;
+		// TODO Auto-generated method stub
+		
 	}
 
 }

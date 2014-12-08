@@ -13,6 +13,7 @@
 */
 package controller;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,7 @@ import model.MakeObject;
 import model.ModelObject;
 import views.NewVehicleFrame;
 import views.NewVehiclePanel;
+import views.NewVehicleTirePanel;
 
 public class NewVehicleController
 {
@@ -30,6 +32,7 @@ public class NewVehicleController
 	private String userName;
 	private MainController mController;
 	private NewVehicleStart newVController;
+	private NewVehicleTirePanel newVehicleTirePanel;
 	
 	public NewVehicleController(NewVehicleStart newVController, NewVehicleFrame newVehicleView, DbAccess dbHandle, MainController mController)
 	{
@@ -74,33 +77,48 @@ public class NewVehicleController
 
 	public void next()
 	{
-		String NickName = newVehiclePanel.txtNickName.getText();
-		System.out.println("NewVehicleController - next --> nickName " + NickName );
+		//String NickName = newVehiclePanel.txtNickName.getText();
+		//System.out.println("NewVehicleController - next --> nickName " + NickName );
 		//test nickname
-	//	if (Pattern.matches("[a-zA-Z0-9]+", newContentPane.txtNickName.getText()) == false || newContentPane.txtNickName.getText().length() == 0){
-//			
-//		}
-//		
-//		//test licenceplate
-//		if (Pattern.matches("[a-zA-Z0-9]+", licensePlate) == false || licensePlate.length() < 5|| licensePlate.length() > 7){
-//			
-//		}
-//		
-//		//test milage
-//		if (Pattern.matches("[0-9]+", mileage) == false){
-//			
-//		}		
+		if (Pattern.matches("[a-zA-Z0-9]+", newVehiclePanel.txtNickName.getText()) == false || newVehiclePanel.txtNickName.getText().length() == 0){
+			return;
+		}
+		
+		//test licenceplate
+		if (Pattern.matches("[a-zA-Z0-9]+", newVehiclePanel.txtLicensePlate.getText()) == false 
+				|| (newVehiclePanel.txtLicensePlate.getText().length() < 6
+				|| newVehiclePanel.txtLicensePlate.getText().length() > 7)){
+			 newVehiclePanel.lblLicensePlaate.setText("Plate Num Invalid");
+			 newVehiclePanel.lblLicensePlaate.setForeground(Color.RED);
+			return;
+		}
+		
+		//test milage
+		if (Pattern.matches("[0-9]+", newVehiclePanel.txtMileage.getText()) == false){
+			return;
+		}		
 		this.newVController.nextTires();
 	}
 
 	public void submit()
-	{
+	{	
+		if (newVehicleTirePanel.txtTireType.getText().length() ==0){
+			newVehicleTirePanel.lblTireType.setText("Type Required");
+			newVehicleTirePanel.lblTireType.setForeground(Color.RED);
+			return;
+		}
 		this.newVController.submit();
 	}
 
 	public void setController(NewVehiclePanel newVehiclePanel)
 	{
 		this.newVehiclePanel = newVehiclePanel;
+		// TODO Auto-generated method stub
+		
+	}
+	public void setController(NewVehicleTirePanel newVehiclePanel)
+	{
+		this.newVehicleTirePanel = newVehiclePanel;
 		// TODO Auto-generated method stub
 		
 	}

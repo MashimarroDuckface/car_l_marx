@@ -45,6 +45,8 @@ public class NewVehiclePanel extends JPanel
 	public JTextField txtLicensePlate;
 	public JTextField txtMileage;
 	public JLabel lblMileage;
+	public JLabel lblNickName;
+	public JLabel lblLicensePlaate;
 
 	/**
 	 * Create the panel.
@@ -57,11 +59,29 @@ public class NewVehiclePanel extends JPanel
 		setBackground(new Color(255, 255, 240));
 		setLayout(null);
 		
-		JLabel lblNickName = new JLabel("Vehicle Nick Name");
+		lblNickName = new JLabel("Vehicle Nick Name");
 		lblNickName.setBounds(19, 20, 139, 16);
 		add(lblNickName);
 		
 		txtNickName = new JTextField();
+		txtNickName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				lblNickName.setText("Licencse Plate");
+				lblNickName.setForeground(Color.BLACK);
+				 
+				 
+				 try{
+		        	 if (txtNickName.getText().length()==0)
+		        	 {
+		        		 throw new NumberFormatException("text is empty");
+		        	 }
+		         }catch (NumberFormatException e1){
+		        	 lblNickName.setText("Nick Name Required");
+		        	 lblNickName.setForeground(Color.RED);
+		         }
+		         }
+		});
 		txtNickName.setBounds(19, 50, 134, 28);
 		add(txtNickName);
 		txtNickName.setColumns(10);
@@ -125,11 +145,28 @@ public class NewVehiclePanel extends JPanel
 		cbxcolor.setBounds(19, 308, 139, 27);
 		add(cbxcolor);
 		
-		JLabel lblLicensePlaate = new JLabel("License Plate");
+		lblLicensePlaate = new JLabel("License Plate");
 		lblLicensePlaate.setBounds(220, 20, 144, 16);
 		add(lblLicensePlaate);
 		
 		txtLicensePlate = new JTextField();
+		txtLicensePlate.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				lblLicensePlaate.setText("Licencse Plate");
+				lblLicensePlaate.setForeground(Color.BLACK);
+				 				 
+				 try{
+		        	 if (txtLicensePlate.getText().length()==0)
+		        	 {
+		        		 throw new NumberFormatException("text is empty");
+		        	 }
+		         }catch (NumberFormatException e1){
+		        	 lblLicensePlaate.setText("Plate Num Required");
+		        	 lblLicensePlaate.setForeground(Color.RED);
+		         }
+		         }
+		});
 		txtLicensePlate.setBounds(220, 50, 134, 28);
 		add(txtLicensePlate);
 		txtLicensePlate.setColumns(10);
@@ -153,7 +190,16 @@ public class NewVehiclePanel extends JPanel
 		            lblMileage.setText("Mileage must be numeric");
 		            lblMileage.setForeground(Color.RED);
 		         }
-			}
+		         try{
+		        	 if (txtMileage.getText().length()==0)
+		        	 {
+		        		 throw new NumberFormatException("text is empty");
+		        	 }
+		         }catch (NumberFormatException e1){
+			            lblMileage.setText("Initial Mileage Required");
+			            lblMileage.setForeground(Color.RED);
+		         }
+		         }
 		});
 		txtMileage.setBounds(220, 133, 134, 28);
 		add(txtMileage);

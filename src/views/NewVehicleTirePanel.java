@@ -20,6 +20,8 @@ import controller.NewVehicleController;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
@@ -40,18 +42,38 @@ public class NewVehicleTirePanel extends JPanel
 	public JTextField txtTireType;
 	public JDatePickerImpl datePickerOn;
 	public JDatePickerImpl datePickerOff;
+	public JLabel lblTireType;
 
 	public NewVehicleTirePanel(final NewVehicleController vController)
 	{
+		
 		setBackground(new Color(255, 255, 240));
 		this.vController = vController;
+		vController.setController(this);
 		setLayout(null);
 
-		JLabel lblTireType = new JLabel("Tire Type");
+		lblTireType = new JLabel("Tire Type");
 		lblTireType.setBounds(34, 19, 84, 16);
 		add(lblTireType);
 
 		txtTireType = new JTextField();
+		txtTireType.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				lblTireType.setText("Tire Type");
+				lblTireType.setForeground(Color.BLACK);
+				 				 
+				 try{
+		        	 if (txtTireType.getText().length()==0)
+		        	 {
+		        		 throw new NumberFormatException("text is empty");
+		        	 }
+		         }catch (NumberFormatException e1){
+		        	 lblTireType.setText("Tire Type Required");
+		        	 lblTireType.setForeground(Color.RED);
+		         }
+		         }
+		});
 		txtTireType.setBounds(34, 48, 134, 28);
 		add(txtTireType);
 		txtTireType.setColumns(10);

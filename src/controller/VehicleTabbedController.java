@@ -218,17 +218,20 @@ public class VehicleTabbedController
 	
 	private void getStudsOnDate()
 	{
-		this.studsOnDate = dbHandle.getStudsOnDate(vehicleId);
+		this.studsOnDate = vehicle.onStudsDate;
+//		this.studsOnDate = dbHandle.getStudsOnDate(vehicleId);
 	}
 	
 	private void getStudsOffDate()
 	{
-		this.studsOffDate = dbHandle.getStudsOffDate(vehicleId);
+		this.studsOffDate = vehicle.offStudsDate;
+//		this.studsOffDate = dbHandle.getStudsOffDate(vehicleId);
 	}
 	
 	public String getTireType()
 	{
-		return dbHandle.getTireType(vehicleId);
+		return vehicle.tireType;
+//		return dbHandle.getTireType(vehicleId);
 	}
 	
 	public void updateTIreType(String tireType)

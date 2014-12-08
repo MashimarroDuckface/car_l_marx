@@ -26,4 +26,8 @@ public class Vehicle
 	public String color;
 	public String licenstPlate;
 	public int mileage;
+	
+	public String offStudsDate;
+	public String onStudsDate;
+	public String tireType;
 }

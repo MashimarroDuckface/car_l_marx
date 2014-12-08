@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import model.VehiclesObject;
+import model.Tires;
 
 public class DbAccess
 {
@@ -65,6 +66,7 @@ public class DbAccess
 	private PreparedStatement getStudsOnDate;
 	private PreparedStatement getStudsOffDate;
 	private PreparedStatement getTireType;
+	private PreparedStatement getTires;
 	private PreparedStatement updateTireType;
 	
 	/**
@@ -184,6 +186,8 @@ public class DbAccess
 			update = "UPDATE `vehicleTable` SET `idColor`= ? WHERE `idVehicle` = ?";
 			updateColor = conn.prepareStatement(update );
 			
+			get = "SELECT * FROM `tireTable` WHERE `idVehicle` = ?";
+			getTires = conn.prepareStatement(get );
 			get = "SELECT `onStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
 			getStudsOnDate = conn.prepareStatement(get );
 			get = "SELECT `offStudsDate` FROM  `tireTable` WHERE  `idVehicle` = ?";
@@ -487,6 +491,11 @@ public class DbAccess
 				vehicle.modle = this.getModelString(vehicleId);
 				vehicle.make = this.getMakeForVehicle(vehicleId);
 				vehicle.color = this.getColorString(vehicleId);
+				Tires tires = new Tires();
+				tires = getTires(vehicleId);
+				vehicle.onStudsDate = tires.onStudsDate;
+				vehicle.offStudsDate = tires.offStudsDate;
+				vehicle.tireType = tires.tireType;
 				return vehicle;
 			}
 		} catch (SQLException e)
@@ -798,6 +807,32 @@ public class DbAccess
 			while (resultSet.next())
 			{
 				return resultSet.getString("onStudsDate");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of studs on date " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Tire Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Tires getTires(int vehicleId)
+	{
+		try
+		{
+			this.getTires.setInt(1, vehicleId);
+			ResultSet resultSet = this.getTires.executeQuery();
+			while (resultSet.next())
+			{
+				Tires tires = new Tires();
+				tires.idVehicle = vehicleId;
+				tires.onStudsDate = resultSet.getString("onStudsDate");
+				tires.offStudsDate = resultSet.getString("offStudsDate");
+				tires.tireType = resultSet.getString("tireType");
+				return tires;
 			}
 		} catch (SQLException e)
 		{

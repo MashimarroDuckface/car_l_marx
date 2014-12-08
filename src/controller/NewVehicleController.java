@@ -85,7 +85,7 @@ public class NewVehicleController
 		}
 		
 		//test licenceplate
-		if (Pattern.matches("[a-zA-Z0-9]+", newVehiclePanel.txtLicensePlate.getText()) == false 
+		if (Pattern.matches("[a-zA-Z0-9 ]+", newVehiclePanel.txtLicensePlate.getText()) == false 
 				|| (newVehiclePanel.txtLicensePlate.getText().length() < 6
 				|| newVehiclePanel.txtLicensePlate.getText().length() > 7)){
 			 newVehiclePanel.lblLicensePlaate.setText("Plate Num Invalid");
@@ -95,6 +95,8 @@ public class NewVehicleController
 		
 		//test milage
 		if (Pattern.matches("[0-9]+", newVehiclePanel.txtMileage.getText()) == false){
+			 newVehiclePanel.lblMileage.setText("Mileage Required");
+			 newVehiclePanel.lblMileage.setForeground(Color.RED);
 			return;
 		}		
 		this.newVController.nextTires();

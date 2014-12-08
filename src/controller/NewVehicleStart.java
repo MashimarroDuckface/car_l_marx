@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
@@ -74,8 +75,12 @@ public class NewVehicleStart
 	
 	public class SubmitListener implements ActionListener
 	{
+		
 		public void actionPerformed(ActionEvent e)
 		{
+			
+			
+			
 			frame.setVisible(false); //you can't see me!
 			frame.dispose(); //Destroy the JFrame object
 	//		mController.vehicleTabbedFrame(user);

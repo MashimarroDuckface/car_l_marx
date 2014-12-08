@@ -14,6 +14,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import model.DbAccess;
 import model.MakeObject;
@@ -58,7 +59,10 @@ public class NewVehicleController
 	
 	public void validateNumeric(String testText)
 	{
-//		 int intValue = 0;
+		if (Pattern.matches("[a-zA-Z]+", testText) == false || testText.length() == 0){
+			
+		}
+		//		 int intValue = 0;
 //         try {
 //            intValue = Integer.parseInt(testText.trim());
 //         } catch (NumberFormatException e) {
@@ -68,6 +72,20 @@ public class NewVehicleController
 
 	public void next()
 	{
+		//test nickname
+		if (Pattern.matches("[a-zA-Z0-9]+", newContentPane.txtNickName.getText()) == false || newContentPane.txtNickName.getText().length() == 0){
+			
+		}
+		
+		//test licenceplate
+		if (Pattern.matches("[a-zA-Z0-9]+", licensePlate) == false || licensePlate.length() < 5|| licensePlate.length() > 7){
+			
+		}
+		
+		//test milage
+		if (Pattern.matches("[0-9]+", mileage) == false){
+			
+		}		
 		this.newVController.nextTires();
 	}
 

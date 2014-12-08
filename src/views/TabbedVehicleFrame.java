@@ -206,7 +206,7 @@ public class TabbedVehicleFrame extends JPanel
 			panelEdit.add(lblMake);
 		}
 		{
-			createLblNickName(panelEdit);
+//			createLblNickName(panelEdit);
 		}
 		/*
 		 * { this isn't working! Very Bad! Lise Nov 17, 2014 //
@@ -407,7 +407,7 @@ public class TabbedVehicleFrame extends JPanel
 			panelMaint.add(lblSummary);
 		}
 		{
-			createLblNickName(panelMaint);
+	//		createLblNickName(panelMaint);
 		}
 
 		return panelMaint;
@@ -420,7 +420,7 @@ public class TabbedVehicleFrame extends JPanel
 
 		panelTires.setLayout(null);
 		{
-			createLblNickName(panelTires);
+//			createLblNickName(panelTires);
 		}
 		{
 			JLabel lblTIreType = new JLabel("Tire Type");
@@ -550,10 +550,10 @@ public class TabbedVehicleFrame extends JPanel
 
 	private void createLblNickName(JPanel currentPanel)
 	{
-		// if (this.lblNickName != null)
-		// {
-		// currentPanel.remove(lblNickName);
-		// }
+		 if (this.lblNickName != null)
+		 {
+		 currentPanel.remove(lblNickName);
+		 }
 		this.lblNickName = new JLabel("");
 		lblNickName.setText(this.nickName);
 		lblNickName.setFont(new Font("Lucida Grande", Font.BOLD, 17));

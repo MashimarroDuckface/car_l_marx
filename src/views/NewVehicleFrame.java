@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.NewVehicleController;
+import controller.NewVehicleStart;
 
 public class NewVehicleFrame extends JFrame
 {
@@ -25,9 +26,11 @@ public class NewVehicleFrame extends JFrame
 	public JPanel contentPane;
 	
 	private NewVehicleController vController;
+	private NewVehicleStart vStartController;
 
-	public NewVehicleFrame()
+	public NewVehicleFrame(NewVehicleStart vStartController)
 	{
+		this.vStartController = vStartController;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

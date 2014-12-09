@@ -50,6 +50,7 @@ public class DbAccess
 	private PreparedStatement getColorString;
 	private PreparedStatement getMakeForVehicle;
 	private PreparedStatement getMakeId;
+	private PreparedStatement getMakeString;
 	private PreparedStatement getMakeIdFromMake;
 	private PreparedStatement getModel;
 	private PreparedStatement getModelIdFromModel;
@@ -140,16 +141,16 @@ public class DbAccess
 			String getUserVehiclesString = "SELECT  idvehicle, makeTable.make, modelTable.model, vehicleTable.nickName, colorTable.color, licensePlate,  mileage FROM  `vehicleTable` INNER JOIN makeTable ON vehicleTable.idmake = makeTable.idmake INNER JOIN modelTable ON vehicleTable.idmodel = modelTable.idmodel INNER JOIN colorTable ON vehicleTable.idColor = colorTable.idcolor WHERE userName LIKE ? ORDER BY `idVehicle`";
 			getUserVehicles = conn.prepareStatement(getUserVehiclesString);
 
-			String getMakeString = "UPDATE  `vehicleTable` SET  `idMake` = ?, `idModel` = ? WHERE  `idVehicle` = ? ";
-			updateMakeAndModel = conn.prepareStatement(getMakeString);
-			getMakeString = "SELECT * FROM `makeTable` ORDER BY `make`";
-			getMake = conn.prepareStatement(getMakeString);
-			getMakeString = "SELECT make FROM `makeTable` INNER JOIN vehicleTable ON vehicleTable.idMake = makeTable.idMake WHERE vehicleTable.idVehicle = ?";
-			getMakeForVehicle = conn.prepareStatement(getMakeString);
-			getMakeString = "SELECT idMake FROM  `makeTable` WHERE  `make` =  ?";
-			getMakeIdFromMake = conn.prepareStatement(getMakeString);
-			String getMakeIdString = "SELECT `idMake` FROM  `makeTable` WHERE  `make` =  ?";
-			getMakeId = conn.prepareStatement(getMakeIdString);
+			String get = "UPDATE  `vehicleTable` SET  `idMake` = ?, `idModel` = ? WHERE  `idVehicle` = ? ";
+			updateMakeAndModel = conn.prepareStatement(get);
+			get = "SELECT * FROM `makeTable` ORDER BY `make`";
+			getMake = conn.prepareStatement(get);
+			get = "SELECT make FROM `makeTable` INNER JOIN vehicleTable ON vehicleTable.idMake = makeTable.idMake WHERE vehicleTable.idVehicle = ?";
+			getMakeForVehicle = conn.prepareStatement(get);
+			get = "SELECT idMake FROM  `makeTable` WHERE  `make` =  ?";
+			getMakeIdFromMake = conn.prepareStatement(get);
+			get = "SELECT `idMake` FROM  `makeTable` WHERE  `make` =  ?";
+			getMakeId = conn.prepareStatement(get);
 			String getModelString = "SELECT  `idModel` FROM  `modelTable`WHERE  `model` =  ?";
 			getModelIdFromModel = conn.prepareStatement(getModelString);
 			getModelString = "SELECT model from modelTable WHERE idMake = ? ";
@@ -162,7 +163,7 @@ public class DbAccess
 			String updateMileageString = "UPDATE  `vehicleTable` SET  `mileage` = ? WHERE  `idVehicle` = ? ";
 			updateMileage = conn.prepareStatement(updateMileageString);
 			
-			String get = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
+			get = "SELECT  `nickName` FROM  `vehicleTable` WHERE  `idVehicle` = ?";
 			getNickName = conn.prepareStatement(get );
 			get = "SELECT `idVehicle` FROM `vehicleTable` WHERE `userName` = ? AND `licensePlate` = ?";
 			getVehicleId = conn.prepareStatement(get );
@@ -172,6 +173,8 @@ public class DbAccess
 			getColorId = conn.prepareStatement(get);
 			get = "SELECT * FROM `vehicleTable` WHERE `idVehicle` =  ?";
 			getVehicle = conn.prepareStatement(get);
+			get = "SELECT make FROM `makeTable` ORDER BY make";
+			getMakeString = conn.prepareStatement(get);
 
 			update = "UPDATE `tireTable` SET `onStudsDate`= ? WHERE idVehicle = ?";
 			updateTiresOnStudsDate = conn.prepareStatement(update );
@@ -421,6 +424,27 @@ public class DbAccess
 		} catch (SQLException e)
 		{
 			System.out.println("error on fetch of get make for vehicle " + e);
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("Make Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		return null; // no make found - problem - should not happen
+	}
+	
+	public String getMakeString()
+	{
+		try
+		{
+			ResultSet resultSet = this.getMakeString.executeQuery();
+			while (resultSet.next())
+			{
+				System.out.println("dbAccess - getMakeString " + resultSet.getString("make"));
+				return resultSet.getString("make");
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("error on fetch of get make  " + e);
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("Make Table: " + e.getErrorCode());

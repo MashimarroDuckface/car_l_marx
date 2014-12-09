@@ -109,7 +109,7 @@ public class NewVehiclePanel extends JPanel
 
 				model = (DefaultComboBoxModel) cbxModel.getModel();
 				model.removeAllElements();
-				model.addElement("-select model");
+	//			model.addElement("-select model");
 				for (ModelObject m : modelList)
 				{
 					model.addElement(m.model);
@@ -124,9 +124,14 @@ public class NewVehiclePanel extends JPanel
 		lnlModel.setBounds(19, 188, 61, 16);
 		add(lnlModel);
 		
-		String[] modelStrings =
-			{ "- Selected Model" };
-		cbxModel = new JComboBox(modelStrings);
+		cbxModel = new JComboBox();
+		model = (DefaultComboBoxModel) cbxModel.getModel();
+		model.removeAllElements();
+		modelList = vController.getModel(vController.getMakeString());
+		for (ModelObject m : modelList )
+		{
+			model.addElement(m.model);
+		}
 		cbxModel.setBounds(19, 216, 139, 27);
 		add(cbxModel);
 		

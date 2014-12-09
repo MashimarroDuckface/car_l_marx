@@ -44,7 +44,7 @@ public class NewVehicleStart
 		this.userName = userName;
 		DbHandle = DbAccess.getInstance();
 		
-		newVehicleView = new NewVehicleFrame();
+		newVehicleView = new NewVehicleFrame(this);
 		vController = new NewVehicleController(this, newVehicleView, DbHandle, mController);
 	
 //		vController.startNewVehicleView();
@@ -78,9 +78,6 @@ public class NewVehicleStart
 		
 		public void actionPerformed(ActionEvent e)
 		{
-			
-			
-			
 			frame.setVisible(false); //you can't see me!
 			frame.dispose(); //Destroy the JFrame object
 	//		mController.vehicleTabbedFrame(user);
@@ -135,7 +132,5 @@ public class NewVehicleStart
 		frame.dispose(); //Destroy the JFrame object
 //		mController.vehicleTabbedFrame(user);
 		mController.goodUser(userName);
-		
-		
 	}
 }

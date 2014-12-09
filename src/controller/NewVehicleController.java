@@ -115,14 +115,15 @@ public class NewVehicleController
 	public void setController(NewVehiclePanel newVehiclePanel)
 	{
 		this.newVehiclePanel = newVehiclePanel;
-		// TODO Auto-generated method stub
-		
 	}
 	public void setController(NewVehicleTirePanel newVehiclePanel)
 	{
 		this.newVehicleTirePanel = newVehiclePanel;
-		// TODO Auto-generated method stub
-		
+	}
+
+	public String getMakeString()
+	{
+		return dbHandle.getMakeString();
 	}
 
 }
